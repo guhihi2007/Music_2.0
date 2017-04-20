@@ -106,9 +106,6 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
 //
 //        RLView_3.setLayoutManager(new LinearLayoutManager(this));
 //        RLView_3.setAdapter(new RecycleAdapter(this, strings));
-//
-//        RLView_4.setLayoutManager(new LinearLayoutManager(this));
-//        RLView_4.setAdapter(new RecycleAdapter(this, strings));
         vp.setAdapter(new vpAdatper(this, viewList));
     }
 
