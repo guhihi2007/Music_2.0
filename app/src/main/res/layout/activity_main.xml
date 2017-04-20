@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.music_20.activity.MainActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+    <LinearLayout
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <TextView
+                android:id="@+id/show_name"
+                android:text="无歌曲播放"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:layout_height="20dp">
+
+            <TextView
+                android:id="@+id/start_time"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="01:23" />
+
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_gravity="center"
+                android:layout_weight="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/end_time"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:text="22:30" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="60dp">
+            <ImageView
+                android:id="@+id/model"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/recycle"/>
+            <ImageView
+                android:id="@+id/previous"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:src="@mipmap/last" />
+
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/play"/>
+
+            <ImageView
+                android:id="@+id/next"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/next"/>
+
+            <ImageView
+                android:id="@+id/list"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:src="@mipmap/list" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
