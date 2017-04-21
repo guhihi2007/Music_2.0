@@ -16,6 +16,15 @@ import java.util.List;
 public class SongAdapter extends CommonRecycleAdapter<Data> {
     private CommonClickListener commonClickListener;
     //歌曲显示的布局图片不一样，布局文件不一样
+    SongAdapter(Context context){
+        super(context, R.layout.viewholder);
+
+    }
+    public SongAdapter(Context context, CommonClickListener commonClickListener) {
+        super(context, R.layout.viewholder);
+        this.commonClickListener = commonClickListener;
+    }
+
     public SongAdapter(Context context, List<Data> datas) {
         super(context, datas, R.layout.viewholder);
     }

@@ -41,6 +41,7 @@ public class ListActivity extends Activity implements InitView,View.OnClickListe
         setListener();
     }
 
+
     @Override
     public void findView() {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -50,15 +51,15 @@ public class ListActivity extends Activity implements InitView,View.OnClickListe
         search_btn=(ImageView)findViewById(R.id.search_btn);
         recyclerView=(RecyclerView) findViewById(R.id.list_reclv);
         float_btn =(FloatingActionButton)findViewById(R.id.float_btn);
+
         scanFile=new ScanFile();
         scanFile.setCallBack(new ScanFile.CallBack() {
             @Override
             public void getData(ArrayList<Data> datas) {
                 dirs=datas;
-                Log.v("gpp", datas.size()+"");
             }
         });
-        scanFile.startScan(path);
+        scanFile.CallbackScan(path);
     }
 
     @Override
@@ -79,12 +80,13 @@ public class ListActivity extends Activity implements InitView,View.OnClickListe
                 finish();
                 break;
             case R.id.search_btn:
-                Log.v("gpp", dirs.size()+"-----search_btn---------");
+                Log.v("gpp","-----search_btn---------");
                 Intent intent = new Intent();
                 intent.setClass(this,DireActivtiy.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("dir",dirs);
                 intent.putExtras(bundle);
+                intent.putExtra("dirpath",path);
                 startActivity(intent);
                 break;
             case R.id.float_btn:

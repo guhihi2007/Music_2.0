@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
 
     @Override
     public void findView() {
-        addsonglist();
+//        addsonglist();
         play = (ImageView) findViewById(R.id.play);
         next = (ImageView) findViewById(R.id.next);
         previous = (ImageView) findViewById(R.id.previous);
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         viewList.add(View_2);
         viewList.add(View_3);
         viewList.add(View_4);
-        CommonRecycleAdapter adapter = new SongAdapter(this, songslist);
+        CommonRecycleAdapter adapter = new SongAdapter(this);
 //        adapter.setItemListener(new RecycleAdapter.ItemListener() {
 //            @Override
 //            public void OnItemClickListener(View view, int position) {
@@ -133,19 +133,19 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     }
 
     public void addsonglist() {
-        String path="";
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        }
-        ScanFile scanFile=new ScanFile();
-        scanFile.startScan(path+"/Music");
-        scanFile.setCallBack(new ScanFile.CallBack() {
-            @Override
-            public void getData(ArrayList<Data> datas) {
-                songslist =datas;
-                Log.v("gpp", "Main文件夹大小:"+datas.size());
-            }
-        });
+//        String path="";
+//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//            path = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        }
+//        ScanFile scanFile=new ScanFile();
+//        scanFile.startScan(path+"/Music");
+//        scanFile.setCallBack(new ScanFile.CallBack() {
+//            @Override
+//            public void getData(ArrayList<Data> datas) {
+//                songslist =datas;
+//                Log.v("gpp", "Main文件夹大小:"+datas.size());
+//            }
+//        });
     }
 
 }

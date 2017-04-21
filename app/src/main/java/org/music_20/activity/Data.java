@@ -7,10 +7,9 @@ import java.io.Serializable;
  */
 
 public class Data implements Serializable {
-    private String name;
-    private String path,size;
-    private int count;
-//    private double size;
+    public String name;
+    public String path,size;
+    public int count;
 
     public Data() {
     }

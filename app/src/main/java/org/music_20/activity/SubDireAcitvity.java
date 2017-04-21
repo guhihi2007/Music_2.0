@@ -3,6 +3,8 @@ package org.music_20.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +16,6 @@ import android.widget.TextView;
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
-import org.music_20.base.CommonRecycleAdapter;
 
 import java.util.ArrayList;
 
@@ -24,22 +25,24 @@ import java.util.ArrayList;
 
 public class SubDireAcitvity extends Activity implements InitView, CommonClickListener {
     private RecyclerView recyclerView;
-    private ArrayList<Data> list, dirs;
+
     private ImageView serach_btn, action_back;
     private TextView action_tv;
     private ScanFile scanFile;
     private Intent intent;
-    private CommonRecycleAdapter adapter;
+    private String dirpath;
+    private DireAdapter adapter;
+    private ArrayList<Data> list;
+    private Handler handler;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subdire);
         Log.v("gpp", "SubDireActivity_onCreate方法");
         intent = getIntent();
-        list = (ArrayList) intent.getSerializableExtra("dir");
-//        Log.v("gpp", "intent获取文件list:" + list.size());
         findView();
         setListener();
+        requestData();
     }
 
     @Override
@@ -48,12 +51,25 @@ public class SubDireAcitvity extends Activity implements InitView, CommonClickLi
         action_back = (ImageView) findViewById(R.id.back_btn);
         serach_btn = (ImageView) findViewById(R.id.search_btn);
         recyclerView = (RecyclerView) findViewById(R.id.dire_reclv);
-        if (list==null|| list.size()==0){
-        }
-        adapter = new DireAdapter(this, list, this);
+        adapter = new DireAdapter(this,this);//不传数据，只传Context，CommonClicklistener
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void requestData() {
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Bundle bundle=msg.getData();
+                list=(ArrayList<Data>) bundle.get("threadList");
+                Log.v("gpp", "Sub_requestData:" + list.size());
+            }
+        };
+        final String path=intent.getStringExtra("dirpath");
+        ScanFile scanFile= new ScanFile();
+        scanFile.startScan(path,adapter,handler);
     }
 
     @Override
@@ -78,20 +94,9 @@ public class SubDireAcitvity extends Activity implements InitView, CommonClickLi
         String dirpath = list.get(position).getPath();
         String dirname = list.get(position).getName();
         Log.v("gpp", "Sub___OnCommonClickListener:" + dirpath);
-        scanFile = new ScanFile();
-        scanFile.setCallBack(new ScanFile.CallBack() {
-            @Override
-            public void getData(ArrayList<Data> datas) {
-                dirs = datas;
-                Log.v("gpp", "Sub___OnCommonClickListener:" + datas.size());
-            }
-        });
-        scanFile.startScan(dirpath);
         Intent intent = new Intent();
-        intent.setClass(this, new SubDireAcitvity().getClass());
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("dir", dirs);
-        intent.putExtras(bundle);
+        intent.setClass(this, SubDireAcitvity.class);
+        intent.putExtra("dirpath", dirpath);
         intent.putExtra("dirname", dirname);
         startActivity(intent);
     }

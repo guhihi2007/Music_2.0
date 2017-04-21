@@ -42,6 +42,8 @@ public class DireActivtiy extends Activity implements InitView, CommonClickListe
     public void getMyData(){
         intent = getIntent();
         list = (ArrayList) intent.getSerializableExtra("dir");
+        Log.v("gpp", "DireActivity_intent获取文件list:" + (list==null?"list为空":list.size()));
+
     }
     @Override
     public void findView() {
@@ -70,30 +72,16 @@ public class DireActivtiy extends Activity implements InitView, CommonClickListe
     @Override
     public void OnCommonClickListener(View v, int position) {
         String dirpath = list.get(position).getPath();
-        final String dirname = list.get(position).getName();
+        String dirname = list.get(position).getName();
         Log.v("gpp", "Dir___OnCommonClickListener:" + dirpath);
-        scanFile = new ScanFile();
-        scanFile.setCallBack(new ScanFile.CallBack() {
-            @Override
-            public void getData(ArrayList<Data> datas) {
-                dirs = datas;
-                Log.v("gpp", "文件夹:" +dirname+ " 大小:"+datas.size());
-            }
-        });
-        scanFile.startScan(dirpath);
         Intent intent = new Intent();
         intent.setClass(this, SubDireAcitvity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("dir", dirs);
-        intent.putExtras(bundle);
+        intent.putExtra("dirpath", dirpath);
         intent.putExtra("dirname", dirname);
-        Log.v("gpp", "跳转SubDireActivity");
+        Log.v("gpp", "进入文件夹:"+dirname);
         startActivity(intent);
     }
 
-    public ArrayList<Data> getDirs() {
-        return dirs;
-    }
 
     @Override
     protected void onRestart() {
