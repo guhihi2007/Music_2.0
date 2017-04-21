@@ -32,19 +32,6 @@ public class DireAdapter extends CommonRecycleAdapter<Data> {
         super(context, data, R.layout.viewholder);
         this.commonClickListener = commonClickListener;
     }
-//父类中实现
-//    public void setData(ArrayList<Data> dirs) {
-//        this.dirs = dirs;
-//        this.notifyDataSetChanged();
-//    }
-//
-//    public void addData(ArrayList<Data> dirs) {
-//        this.dirs.clear();
-//        this.dirs = dirs;
-//        this.dirs.addAll(dirs);
-//        this.notifyDataSetChanged();
-//
-//    }
 
     //文件夹的布修改了imageview的图片背景
     //修改了第二个textview的显示
