@@ -24,6 +24,7 @@
         <activity android:name=".activity.SearchActivtiy" />
         <activity android:name=".activity.AddListAcitvity"
             android:windowSoftInputMode="stateAlwaysVisible"/>
+        <activity android:name=".activity.SongListActivtiy" />
     </application>
 
 </manifest>

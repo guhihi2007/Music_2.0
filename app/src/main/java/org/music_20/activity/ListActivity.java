@@ -34,6 +34,7 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
     private ArrayList<Folder> dblist;
     private TextView action_tv;
     private CommonRecycleAdapter adapter;
+    private Intent intent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,7 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
 
     @Override
     public void findView() {
-        Intent intent =getIntent();
+        intent =getIntent();
         dblist=(ArrayList<Folder>)intent.getSerializableExtra("dblist");
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             path = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -53,16 +54,17 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
         back_btn = (ImageView) findViewById(R.id.back_btn);
         search_btn = (ImageView) findViewById(R.id.search_btn);
         recyclerView = (RecyclerView) findViewById(R.id.list_reclv);
-        float_btn = (FloatingActionButton) findViewById(R.id.float_btn);
+//        float_btn = (FloatingActionButton) findViewById(R.id.float_btn);
         action_tv =(TextView) findViewById(R.id.action_tv);
     }
 
     @Override
     public void setListener() {
-        action_tv.setText("播放列表");
+        action_tv.setText(intent.getStringExtra("dirname"));
         back_btn.setOnClickListener(this);
+        search_btn.setImageResource(R.mipmap.add);
         search_btn.setOnClickListener(this);
-        float_btn.setOnClickListener(this);
+//        float_btn.setOnClickListener(this);
         adapter = new ListAdapter(this,this);
         adapter.setDatas(dblist);//把数据库拿出的list添加到adapter
         RecyclerView.LayoutManager manager = new GridLayoutManager(this,4);
@@ -78,34 +80,43 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
                 finish();
                 break;
             case R.id.search_btn:
-                Intent intent = new Intent();
-                intent.setClass(this, SearchActivtiy.class);
-                intent.putExtra("dirname", "查找文件");
-                intent.putExtra("dirpath", path);
-                startActivity(intent);
-                break;
-            case R.id.float_btn:
                 Intent add = new Intent();
                 add.setClass(this,AddListAcitvity.class);
                 startActivityForResult(add,RequestCode);//startActivityForResult
+//                Intent intent = new Intent();
+//                intent.setClass(this, SearchActivtiy.class);
+//                intent.putExtra("dirname", "查找文件");
+//                intent.putExtra("dirpath", path);
+//                startActivity(intent);
                 break;
+//            case R.id.float_btn:
+//                Intent add = new Intent();
+//                add.setClass(this,AddListAcitvity.class);
+//                startActivityForResult(add,RequestCode);//startActivityForResult
+//                break;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String result=data.getStringExtra("list_name");//从返回的activity Intent中取数据
-        Folder file= new Folder();
-        file.setName(result);
-        dblist.add(file);
-        adapter.setDatas(dblist);
-        Log.v("gpp","List大小:"+dblist.size());
+        if (data==null) return;
+            String result = data.getStringExtra("list_name");//从返回的activity Intent中取数据
+            Folder file = new Folder();
+            file.setName(result);
+            dblist.add(file);
+            adapter.setDatas(dblist);
+            Log.v("gpp", "新建播放列表后List大小:" + dblist.size());
     }
 
 
     @Override
     public void OnCommonClickListener(View v, int position) {
-
+        String dirname = dblist.get(position).getName();
+        Intent intent = new Intent();
+        intent.setClass(this, SongListActivtiy.class);
+        intent.putExtra("dirname", dirname);
+        Log.v("gpp", "进入播放列表:" + dirname);
+        startActivity(intent);
     }
 
     @Override

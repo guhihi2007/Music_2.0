@@ -28,7 +28,7 @@ public class DB_ModifyPlayList {
     }
 
     public void addPlayList(String list_name) {
-        Log.v("gpp", "addPlayList() ");
+//        Log.v("gpp", "addPlayList() ");
         ContentValues cv = new ContentValues();
         cv.put(Table_Column_Name, list_name);
         database.insert(mTableName, null, cv);
@@ -36,7 +36,7 @@ public class DB_ModifyPlayList {
     }
 
     public ArrayList<Folder> getPlayList() {
-        Log.v("gpp", "getPlayList() ");
+//        Log.v("gpp", "getPlayList() ");
         Cursor cursor;
         ArrayList<Folder> list = new ArrayList<>();
         cursor = database.query(mTableName, null, null, null, null, null, null);

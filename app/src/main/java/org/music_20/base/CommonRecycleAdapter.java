@@ -53,7 +53,7 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
             LayoutID = viewType;
         }
         View view = layoutInflater.inflate(LayoutID, parent, false);
-        Log.v("gpp","===创建viewholder====");
+//        Log.v("gpp","===创建viewholder====");
         CommonViewHolder commonViewHolder = new CommonViewHolder(view);
         return commonViewHolder;
     }

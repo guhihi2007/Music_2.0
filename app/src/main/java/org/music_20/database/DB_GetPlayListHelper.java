@@ -10,7 +10,7 @@ import android.util.Log;
 public class DB_GetPlayListHelper implements DB_Interface {
     @Override
     public DataBaseHelper getDBhelper(Context context) {
-        Log.v("gpp", "getDBhelper() ");
+//        Log.v("gpp", "getDBhelper() ");
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context,DB_CreatePlayList.DBNAME,DB_CreatePlayList.VERSION);
         DB_CreatePlayList db_createPlayList= new DB_CreatePlayList();
         dataBaseHelper.setAbstractCreateDB(db_createPlayList);

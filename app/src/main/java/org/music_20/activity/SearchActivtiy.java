@@ -93,7 +93,6 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
 
     @Override
     public void setListener() {
-        action_tv.setText("查找文件");
         action_tv.setText(intent.getStringExtra("dirname"));
         serach_btn.setVisibility(View.INVISIBLE);
         action_back.setOnClickListener(new View.OnClickListener() {

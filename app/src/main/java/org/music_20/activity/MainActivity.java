@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("dblist", dblist);
                 intent.putExtras(bundle);
+                intent.putExtra("dirname", "播放列表");
                 startActivity(intent);
                 break;
         }
