@@ -8,12 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import org.music_20.base.CommonClickListener;
-import org.music_20.base.CommonViewHolder;
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.base.CommonRecycleAdapter;
@@ -29,8 +27,7 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
     private RecyclerView recyclerView;
     private FloatingActionButton float_btn;
     private String path;
-    private ArrayList<Data> dirs, songslist;
-    private ScanFile scanFile;
+    private ArrayList<Data>  songslist;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,15 +49,6 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
         search_btn = (ImageView) findViewById(R.id.search_btn);
         recyclerView = (RecyclerView) findViewById(R.id.list_reclv);
         float_btn = (FloatingActionButton) findViewById(R.id.float_btn);
-
-        scanFile = new ScanFile();
-        scanFile.setCallBack(new ScanFile.CallBack() {
-            @Override
-            public void getData(ArrayList<Data> datas) {
-                dirs = datas;
-            }
-        });
-        scanFile.CallbackScan(path);
     }
 
     @Override
@@ -83,10 +71,8 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
                 break;
             case R.id.search_btn:
                 Intent intent = new Intent();
-                intent.setClass(this, DireActivtiy.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("dir", dirs);
-                intent.putExtras(bundle);
+                intent.setClass(this, SearchActivtiy.class);
+                intent.putExtra("dirname", "查找文件");
                 intent.putExtra("dirpath", path);
                 startActivity(intent);
                 break;

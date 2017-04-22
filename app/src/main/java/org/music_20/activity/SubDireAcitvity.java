@@ -36,11 +36,10 @@ public class SubDireAcitvity extends Activity implements InitView, CommonClickLi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subdire);
-        Log.v("gpp", "SubDireActivity_onCreate方法");
         intent = getIntent();
         findView();
         setListener();
-        requestData();
+//        requestData();
     }
 
     @Override
@@ -68,7 +67,7 @@ public class SubDireAcitvity extends Activity implements InitView, CommonClickLi
         };
         final String path=intent.getStringExtra("dirpath");
         ScanFile scanFile= new ScanFile();
-        scanFile.startScan(path,handler);
+//        scanFile.startScan(path,handler);
     }
 
     @Override
@@ -84,15 +83,12 @@ public class SubDireAcitvity extends Activity implements InitView, CommonClickLi
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void OnCommonClickListener(View v, int position) {
+
         String dirpath = list.get(position).getPath();
         String dirname = list.get(position).getName();
         Log.v("gpp", "Sub___OnCommonClickListener:" + dirpath);
+
         Intent intent = new Intent();
         intent.setClass(this, SubDireAcitvity.class);
         intent.putExtra("dirpath", dirpath);

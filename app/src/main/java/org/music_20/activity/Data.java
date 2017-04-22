@@ -1,33 +1,25 @@
 package org.music_20.activity;
 
+import android.content.pm.PackageManager;
+
 import java.io.Serializable;
 
 /**
  * Created by Administrator on 2017/4/19.
  */
 
-public class Data implements Serializable {
-    private String name;
-    private String path,size,type;
-    private int count;
-
-    public Data() {
-    }
-
+public abstract class Data<T> implements Serializable {
+    protected String name;
+    protected String path, type;
+    private String size,fall_name;
     public Data(String name, String path) {
         this.name = name;
         this.path = path;
     }
 
-    public Data(String name, String path,int count,String type) {
+    public Data(String name, String path, String type) {
         this(name, path);
-        this.count = count;
-    }
-
-    public Data(String name, String path,String size, String type) {
-        this(name, path);
-        this.size=size;
-        this.type=type;
+        this.type = type;
     }
 
     public String getName() {
@@ -42,29 +34,32 @@ public class Data implements Serializable {
         return path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int size) {
-        this.count = count;
-    }
 
     public String getSize() {
-        return size;
+        return giveSize();
     }
+    protected abstract String giveSize();
+    public int getCount() {
+        return giveCount();
+    }
+    protected abstract int giveCount();
+
+    public String getFall_name() {
+        return givefall_name();
+    }
+
+    protected abstract String givefall_name();
+
 
     public void setSize(String size) {
         this.size = size;
     }
 
     public String getType() {
-        return type;
+        return giveType();
     }
+
+    protected abstract String giveType();
 
     public void setType(String type) {
         this.type = type;

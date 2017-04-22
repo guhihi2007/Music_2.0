@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
 import org.music_20.R;
-import org.music_20.base.CommonRecycleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
 
     @Override
     public void findView() {
-        addsonglist();
+//        addsonglist();
         play = (ImageView) findViewById(R.id.play);
         next = (ImageView) findViewById(R.id.next);
         previous = (ImageView) findViewById(R.id.previous);

@@ -34,11 +34,12 @@ public class DireAdapter extends CommonRecycleAdapter<Data> implements MultiItem
     //修改了第二个textview的显示
     @Override
     protected void bindData(CommonViewHolder holder, Data data) {
-        holder.setText(R.id.vh_tv, data.getName());
         String type = ".mp3";
         if (type.equals(data.getType())) {
-            holder.setText(R.id.vh_tv2, data.getSize());
+            holder.setText(R.id.vh_tv, data.getFall_name());
+            holder.setText(R.id.vh_tv2,data.getSize());
         } else {
+            holder.setText(R.id.vh_tv, data.getName());
             holder.setText(R.id.vh_tv2, data.getCount() + "项");
         }
         holder.setCommonClickListener(commonClickListener);

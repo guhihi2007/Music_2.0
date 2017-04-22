@@ -3,16 +3,11 @@ package org.music_20.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-
-import org.music_20.base.CommonRecycleAdapter;
-
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 
 /**
  * Created by Administrator on 2017/4/19.
@@ -24,16 +19,17 @@ public class ScanFile {
     private ArrayList<Data> threadList;
 
     //开启线程扫描，并且把数据传给adapter
-    public void startScan(final String path,final Handler handler) {
+    public void startScan(final String path, final Handler handler, final CheckFileCallBack callBack) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                threadList = ScanFile.scan(path);
+                threadList = scan(path);
                 Message msg = new Message();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("threadList", threadList);
                 msg.setData(bundle);
                 handler.sendMessage(msg);
+                callBack.checkCallBack(CheckFileCallBack.Result.done);
             }
         }).start();
     }
@@ -48,7 +44,11 @@ public class ScanFile {
         }).start();
     }
 
-    public static ArrayList<Data> scan(String path) {
+    public ScanFile() {
+    }
+
+    public ArrayList<Data> scan(String path) {
+        Data data=null;
         java.util.ArrayList<Data> list = new java.util.ArrayList<>();
         File file = new File(path);
         File[] files = file.listFiles();
@@ -58,12 +58,9 @@ public class ScanFile {
                     String filename = files[i].getName();
                     String filepath = files[i].getAbsolutePath();
                     int count = scan(filepath).size();
-                    long length = files[i].length();
-                    String size = calculateSizeMB(length);
                     String type = "dir";
-                    Data data = new Data(filename, filepath, count, type);
+                    data = new Folder(filename, filepath,count,type);
                     list.add(data);
-                    Log.v("gpp", "文件夹：" + filename);
                 } else if (files[i].isFile() && files[i].getName().endsWith(".mp3") && !(files[i].isHidden())) {
                     String fall_name = files[i].getName();
                     String name = fall_name.substring(0, fall_name.lastIndexOf("."));
@@ -71,20 +68,17 @@ public class ScanFile {
                     long length = files[i].length();
                     String size = calculateSizeMB(length);
                     String type = ".mp3";
-                    Data data = new Data(name, songpath, size, type);
+                    data = new Song(name, songpath,type,fall_name, size);
                     list.add(data);
-                    Log.v("gpp", "文件：" + name);
                 }
             }
+            Collections.sort(list, new sortByName());
         }
-        Collections.sort(list, new sortByName());
         return list;
     }
 
-    public ScanFile() {
-    }
 
-    //接口回调复制
+    //接口回调赋值
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
     }
@@ -93,6 +87,18 @@ public class ScanFile {
     interface CallBack {
         void getData(ArrayList<Data> datas);
     }
+
+
+    //是否正在扫描文件接口
+    interface CheckFileCallBack {
+        void checkCallBack(Result result);
+
+        enum Result {
+            doing,//正在扫描
+            done//扫描结束
+        }
+    }
+
 
     //对list排序的实现类，根据名字排序
     static class sortByName implements Comparator<Data> {

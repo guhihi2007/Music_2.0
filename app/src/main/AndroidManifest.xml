@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ListActivity" />
-        <activity android:name=".activity.DireActivtiy" />
+        <activity android:name=".activity.SearchActivtiy" />
         <activity android:name=".activity.SubDireAcitvity" />
     </application>
 
