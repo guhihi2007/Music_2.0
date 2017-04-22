@@ -23,14 +23,12 @@ import java.util.ArrayList;
  * Created by Administrator on 2017/4/20.
  */
 
-public class SubDireAcitvity extends Activity implements InitView, CommonClickListener {
+public class SubDireAcitvity extends Activity implements InitView, CommonClickListener{
     private RecyclerView recyclerView;
 
     private ImageView serach_btn, action_back;
     private TextView action_tv;
-    private ScanFile scanFile;
     private Intent intent;
-    private String dirpath;
     private DireAdapter adapter;
     private ArrayList<Data> list;
     private Handler handler;
@@ -51,7 +49,7 @@ public class SubDireAcitvity extends Activity implements InitView, CommonClickLi
         action_back = (ImageView) findViewById(R.id.back_btn);
         serach_btn = (ImageView) findViewById(R.id.search_btn);
         recyclerView = (RecyclerView) findViewById(R.id.dire_reclv);
-        adapter = new DireAdapter(this,this);//不传数据，只传Context，CommonClicklistener
+        adapter = new DireAdapter(this,this);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -64,12 +62,13 @@ public class SubDireAcitvity extends Activity implements InitView, CommonClickLi
                 super.handleMessage(msg);
                 Bundle bundle=msg.getData();
                 list=(ArrayList<Data>) bundle.get("threadList");
-                Log.v("gpp", "Sub_requestData:" + list.size());
+                adapter.setDatas(list);//更新Recycleview数据
+                Log.v("gpp", "Handler:" + list.size());
             }
         };
         final String path=intent.getStringExtra("dirpath");
         ScanFile scanFile= new ScanFile();
-        scanFile.startScan(path,adapter,handler);
+        scanFile.startScan(path,handler);
     }
 
     @Override
@@ -106,13 +105,6 @@ public class SubDireAcitvity extends Activity implements InitView, CommonClickLi
         return false;
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        if (dirs != null) {
-//            dirs.clear();
-//            Log.v("gpp", "list有数据，清空list");
-//        }
-    }
+
 }
 

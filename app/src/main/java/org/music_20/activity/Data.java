@@ -7,9 +7,9 @@ import java.io.Serializable;
  */
 
 public class Data implements Serializable {
-    public String name;
-    public String path,size;
-    public int count;
+    private String name;
+    private String path,size,type;
+    private int count;
 
     public Data() {
     }
@@ -19,14 +19,15 @@ public class Data implements Serializable {
         this.path = path;
     }
 
-    public Data(String name, String path,String size) {
+    public Data(String name, String path,int count,String type) {
         this(name, path);
-        this.size = size;
+        this.count = count;
     }
 
-    public Data(String name, String path,String size, int count) {
-        this(name, path, size);
-        this.count = count;
+    public Data(String name, String path,String size, String type) {
+        this(name, path);
+        this.size=size;
+        this.type=type;
     }
 
     public String getName() {
@@ -59,5 +60,13 @@ public class Data implements Serializable {
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

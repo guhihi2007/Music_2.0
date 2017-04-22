@@ -12,31 +12,32 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.music_20.base.CommonClickListener;
+import org.music_20.base.CommonViewHolder;
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.base.CommonRecycleAdapter;
-
 import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2017/4/18.
  */
 
-public class ListActivity extends Activity implements InitView,View.OnClickListener{
+public class ListActivity extends Activity implements InitView, View.OnClickListener ,CommonClickListener{
 
-    private ImageView back_btn,search_btn;
+    private ImageView back_btn, search_btn;
     private RecyclerView recyclerView;
     private FloatingActionButton float_btn;
     private String path;
-    private ArrayList<Data> dirs,songslist;
+    private ArrayList<Data> dirs, songslist;
     private ScanFile scanFile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        Intent intent= getIntent();
-        songslist=(ArrayList) intent.getSerializableExtra("dir");
+        Intent intent = getIntent();
+        songslist = (ArrayList) intent.getSerializableExtra("dir");
         findView();
         setListener();
     }
@@ -47,16 +48,16 @@ public class ListActivity extends Activity implements InitView,View.OnClickListe
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             path = Environment.getExternalStorageDirectory().getAbsolutePath();
         }
-        back_btn=(ImageView)findViewById(R.id.back_btn);
-        search_btn=(ImageView)findViewById(R.id.search_btn);
-        recyclerView=(RecyclerView) findViewById(R.id.list_reclv);
-        float_btn =(FloatingActionButton)findViewById(R.id.float_btn);
+        back_btn = (ImageView) findViewById(R.id.back_btn);
+        search_btn = (ImageView) findViewById(R.id.search_btn);
+        recyclerView = (RecyclerView) findViewById(R.id.list_reclv);
+        float_btn = (FloatingActionButton) findViewById(R.id.float_btn);
 
-        scanFile=new ScanFile();
+        scanFile = new ScanFile();
         scanFile.setCallBack(new ScanFile.CallBack() {
             @Override
             public void getData(ArrayList<Data> datas) {
-                dirs=datas;
+                dirs = datas;
             }
         });
         scanFile.CallbackScan(path);
@@ -67,7 +68,8 @@ public class ListActivity extends Activity implements InitView,View.OnClickListe
         back_btn.setOnClickListener(this);
         search_btn.setOnClickListener(this);
         float_btn.setOnClickListener(this);
-        CommonRecycleAdapter adapter= new SongAdapter(this,songslist);
+        CommonRecycleAdapter adapter = new DireAdapter(this,this);
+        adapter.setDatas(songslist);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -75,22 +77,31 @@ public class ListActivity extends Activity implements InitView,View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.back_btn:
                 finish();
                 break;
             case R.id.search_btn:
-                Log.v("gpp","-----search_btn---------");
                 Intent intent = new Intent();
-                intent.setClass(this,DireActivtiy.class);
+                intent.setClass(this, DireActivtiy.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("dir",dirs);
+                bundle.putSerializable("dir", dirs);
                 intent.putExtras(bundle);
-                intent.putExtra("dirpath",path);
+                intent.putExtra("dirpath", path);
                 startActivity(intent);
                 break;
             case R.id.float_btn:
                 break;
         }
+    }
+
+    @Override
+    public void OnCommonClickListener(View v, int position) {
+
+    }
+
+    @Override
+    public boolean OnCommonLongClickListener(View v, int position) {
+        return false;
     }
 }

@@ -14,7 +14,6 @@ import android.widget.TextView;
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
-import org.music_20.base.CommonRecycleAdapter;
 
 import java.util.ArrayList;
 
@@ -27,7 +26,6 @@ public class DireActivtiy extends Activity implements InitView, CommonClickListe
     public ArrayList<Data> list, dirs;
     private ImageView serach_btn, action_back;
     private TextView action_tv;
-    private ScanFile scanFile;
     private Intent intent;
 
     @Override
@@ -39,19 +37,20 @@ public class DireActivtiy extends Activity implements InitView, CommonClickListe
         setListener();
     }
 
-    public void getMyData(){
+    public void getMyData() {
         intent = getIntent();
         list = (ArrayList) intent.getSerializableExtra("dir");
         Log.v("gpp", "DireActivity_intent获取文件list:" + (list==null?"list为空":list.size()));
 
     }
+
     @Override
     public void findView() {
         action_tv = (TextView) findViewById(R.id.action_tv);
         action_back = (ImageView) findViewById(R.id.back_btn);
         serach_btn = (ImageView) findViewById(R.id.search_btn);
         recyclerView = (RecyclerView) findViewById(R.id.dire_reclv);
-        CommonRecycleAdapter adapter = new DireAdapter(this, list, this);
+        DireAdapter adapter = new DireAdapter(this,list, this);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -78,22 +77,22 @@ public class DireActivtiy extends Activity implements InitView, CommonClickListe
         intent.setClass(this, SubDireAcitvity.class);
         intent.putExtra("dirpath", dirpath);
         intent.putExtra("dirname", dirname);
-        Log.v("gpp", "进入文件夹:"+dirname);
+        Log.v("gpp", "进入文件夹:" + dirname);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean OnCommonLongClickListener(View v, int position) {
+        return false;
     }
 
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (dirs != null) {
-            dirs.clear();
-            Log.v("gpp", "dir有数据，清空dir");
-        }
-    }
-
-    @Override
-    public boolean OnCommonLongClickListener(View v, int position) {
-        return false;
+//        if (dirs != null) {
+//            dirs.clear();
+//            Log.v("gpp", "dir有数据，清空dir");
+//        }
     }
 }

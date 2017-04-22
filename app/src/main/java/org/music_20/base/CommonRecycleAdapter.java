@@ -17,13 +17,14 @@ import java.util.List;
 
 public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<CommonViewHolder> {
     //数据支持泛型List<T>
-    private List<T> datas;
+    protected List<T> datas;
     private LayoutInflater layoutInflater;
-    private int LayoutID;
+    protected int LayoutID;
+    private Context context;
+    protected MultiItemViewType<T> multiItemViewType;
 
-    public CommonRecycleAdapter(Context context,int layoutID){
+    public CommonRecycleAdapter(Context context) {
         this.layoutInflater = LayoutInflater.from(context);
-        this.LayoutID = layoutID;
     }
 
     //构造方法中传入datas,layoutID,layoutID就是viewholder的布局文件id
@@ -32,16 +33,34 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
         this.datas = datas;
         this.LayoutID = layoutID;
     }
+    public CommonRecycleAdapter(Context context, List<T> datas) {
+        this.layoutInflater = LayoutInflater.from(context);
+        this.datas = datas;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (multiItemViewType != null) {
+            return multiItemViewType.getLayouId(datas.get(position), position);
+        }
+        return super.getItemViewType(position);
+    }
+
     @Override
     public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (multiItemViewType != null) {
+            LayoutID = viewType;
+        }
         View view = layoutInflater.inflate(LayoutID, parent, false);
         CommonViewHolder commonViewHolder = new CommonViewHolder(view);
         return commonViewHolder;
     }
-    public void setDatas(List<T> datas){
-        this.datas=datas;
+
+    public void setDatas(List<T> datas) {
+        this.datas = datas;
         this.notifyDataSetChanged();
     }
+
     public void addData(List<T> datas) {
         this.datas.clear();
         this.datas = datas;

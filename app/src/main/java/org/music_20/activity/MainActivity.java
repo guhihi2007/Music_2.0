@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.base.CommonRecycleAdapter;
@@ -20,7 +21,7 @@ import org.music_20.base.CommonRecycleAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements InitView, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements InitView, View.OnClickListener ,CommonClickListener{
 
     private ImageView play, next, previous, model, list;
     private ViewPager vp;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
 
     @Override
     public void findView() {
-//        addsonglist();
+        addsonglist();
         play = (ImageView) findViewById(R.id.play);
         next = (ImageView) findViewById(R.id.next);
         previous = (ImageView) findViewById(R.id.previous);
@@ -75,7 +76,8 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         viewList.add(View_2);
         viewList.add(View_3);
         viewList.add(View_4);
-        CommonRecycleAdapter adapter = new SongAdapter(this);
+//        CommonRecycleAdapter adapter = new DireAdapter(this,this);
+//        adapter.setDatas(songslist);
 //        adapter.setItemListener(new RecycleAdapter.ItemListener() {
 //            @Override
 //            public void OnItemClickListener(View view, int position) {
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
 //            }
 //        });
         RLView_1.setLayoutManager(new LinearLayoutManager(this));
-        RLView_1.setAdapter(adapter);
+//        RLView_1.setAdapter(adapter);
         RLView_1.setHasFixedSize(true);
         RLView_1.setItemAnimator(new DefaultItemAnimator());
         RLView_1.setOnLongClickListener(new View.OnLongClickListener() {
@@ -133,19 +135,28 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     }
 
     public void addsonglist() {
-//        String path="";
-//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//            path = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        }
-//        ScanFile scanFile=new ScanFile();
-//        scanFile.startScan(path+"/Music");
-//        scanFile.setCallBack(new ScanFile.CallBack() {
-//            @Override
-//            public void getData(ArrayList<Data> datas) {
-//                songslist =datas;
-//                Log.v("gpp", "Main文件夹大小:"+datas.size());
-//            }
-//        });
+        String path="";
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        }
+        ScanFile scanFile=new ScanFile();
+        scanFile.setCallBack(new ScanFile.CallBack() {
+            @Override
+            public void getData(ArrayList<Data> datas) {
+                songslist =datas;
+                Log.v("gpp", "Main文件夹大小:"+datas.size());
+            }
+        });
+        scanFile.CallbackScan(path+"/Music");
     }
 
+    @Override
+    public void OnCommonClickListener(View v, int position) {
+
+    }
+
+    @Override
+    public boolean OnCommonLongClickListener(View v, int position) {
+        return false;
+    }
 }

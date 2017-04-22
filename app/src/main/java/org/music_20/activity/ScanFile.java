@@ -24,22 +24,22 @@ public class ScanFile {
     private ArrayList<Data> threadList;
 
     //开启线程扫描，并且把数据传给adapter
-    public void startScan(final String path, final CommonRecycleAdapter adapter, final Handler handler) {
+    public void startScan(final String path,final Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 threadList = ScanFile.scan(path);
-                adapter.setDatas(threadList);
-                Message msg= new Message();
-                Bundle bundle= new Bundle();
-                bundle.putSerializable("threadList",threadList);
+                Message msg = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("threadList", threadList);
                 msg.setData(bundle);
                 handler.sendMessage(msg);
             }
         }).start();
     }
+
     //回调返回结果
-    public void CallbackScan(final String path){
+    public void CallbackScan(final String path) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -47,6 +47,7 @@ public class ScanFile {
             }
         }).start();
     }
+
     public static ArrayList<Data> scan(String path) {
         java.util.ArrayList<Data> list = new java.util.ArrayList<>();
         File file = new File(path);
@@ -59,7 +60,8 @@ public class ScanFile {
                     int count = scan(filepath).size();
                     long length = files[i].length();
                     String size = calculateSizeMB(length);
-                    Data data = new Data(filename, filepath, size, count);
+                    String type = "dir";
+                    Data data = new Data(filename, filepath, count, type);
                     list.add(data);
                     Log.v("gpp", "文件夹：" + filename);
                 } else if (files[i].isFile() && files[i].getName().endsWith(".mp3") && !(files[i].isHidden())) {
@@ -68,7 +70,8 @@ public class ScanFile {
                     String songpath = files[i].getAbsolutePath();
                     long length = files[i].length();
                     String size = calculateSizeMB(length);
-                    Song data = new Song(name, songpath, size);
+                    String type = ".mp3";
+                    Data data = new Data(name, songpath, size, type);
                     list.add(data);
                     Log.v("gpp", "文件：" + name);
                 }
