@@ -31,7 +31,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
     private Intent intent;
     private ScanFile.CheckFileCallBack callback;
     private CheckDialog dialog;
-    private DireAdapter adapter;
+    private SearchAdapter adapter;
     private Handler handler;
 
     @Override
@@ -85,7 +85,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
         action_back = (ImageView) findViewById(R.id.back_btn);
         serach_btn = (ImageView) findViewById(R.id.search_btn);
         recyclerView = (RecyclerView) findViewById(R.id.dire_reclv);
-        adapter = new DireAdapter(this, this);
+        adapter = new SearchAdapter(this, this);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);

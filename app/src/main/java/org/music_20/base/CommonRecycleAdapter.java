@@ -2,6 +2,7 @@ package org.music_20.base;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
             LayoutID = viewType;
         }
         View view = layoutInflater.inflate(LayoutID, parent, false);
+        Log.v("gpp","===创建viewholder====");
         CommonViewHolder commonViewHolder = new CommonViewHolder(view);
         return commonViewHolder;
     }
@@ -62,7 +64,7 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     }
 
     public void addData(List<T> datas) {
-        this.datas.clear();
+//        this.datas.clear();
         this.datas = datas;
         this.datas.addAll(datas);
         this.notifyDataSetChanged();

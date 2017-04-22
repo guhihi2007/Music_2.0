@@ -1,6 +1,5 @@
 package org.music_20.activity;
 
-import android.content.pm.PackageManager;
 
 import java.io.Serializable;
 
@@ -12,6 +11,7 @@ public abstract class Data<T> implements Serializable {
     protected String name;
     protected String path, type;
     private String size,fall_name;
+    public Data(){}
     public Data(String name, String path) {
         this.name = name;
         this.path = path;

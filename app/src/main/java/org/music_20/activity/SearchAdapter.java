@@ -14,17 +14,17 @@ import java.util.List;
  * Created by Administrator on 2017/4/19.
  */
 
-public class DireAdapter extends CommonRecycleAdapter<Data> implements MultiItemViewType<Data> {
+public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiItemViewType<Data> {
 
     private CommonClickListener commonClickListener;
 
-    public DireAdapter(Context context, CommonClickListener commonClickListener) {
+    public SearchAdapter(Context context, CommonClickListener commonClickListener) {
         super(context);
         this.commonClickListener = commonClickListener;
         this.multiItemViewType = this;
     }
 
-    public DireAdapter(Context context, List data, CommonClickListener commonClickListener) {
+    public SearchAdapter(Context context, List data, CommonClickListener commonClickListener) {
         super(context, data);
         this.commonClickListener = commonClickListener;
         this.multiItemViewType = this;
@@ -51,7 +51,7 @@ public class DireAdapter extends CommonRecycleAdapter<Data> implements MultiItem
         if (type.equals(item.getType())) {
             return R.layout.music_layout;
         } else {
-            return R.layout.direct_layout;
+            return R.layout.folder_layout;
         }
     }
 }

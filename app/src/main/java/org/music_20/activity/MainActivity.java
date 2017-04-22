@@ -1,7 +1,6 @@
 package org.music_20.activity;
 
 import android.content.Intent;
-import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.widget.ImageView;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
 import org.music_20.R;
+import org.music_20.database.DB_ModifyPlayList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     private List<View> viewList;
     private RecyclerView RLView_1, RLView_2, RLView_3, RLView_4;
     private View View_1, View_2, View_3, View_4;
-    private ArrayList<Data> songslist;
+    private ArrayList<Folder> dblist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         viewList.add(View_2);
         viewList.add(View_3);
         viewList.add(View_4);
-//        CommonRecycleAdapter adapter = new DireAdapter(this,this);
-//        adapter.setDatas(songslist);
+//        CommonRecycleAdapter adapter = new SearchAdapter(this,this);
+//        adapter.setDatas(dblist);
 //        adapter.setItemListener(new RecycleAdapter.ItemListener() {
 //            @Override
 //            public void OnItemClickListener(View view, int position) {
@@ -122,32 +122,35 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             case R.id.model:
                 break;
             case R.id.list:
-                Log.v("gpp", "点击：list_but");
+                Log.v("gpp", "点击：list_btn");
+                DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this);
+                dblist =dbModifyPlayList.getPlayList();
+                Log.v("gpp", "dblist大小："+ (dblist ==null? 0: dblist.size()));
                 Intent intent = new Intent();
                 intent.setClass(this, ListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("dir",songslist);
+                bundle.putSerializable("dblist", dblist);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
         }
     }
-
-    public void addsonglist() {
-        String path="";
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        }
-        ScanFile scanFile=new ScanFile();
-        scanFile.setCallBack(new ScanFile.CallBack() {
-            @Override
-            public void getData(ArrayList<Data> datas) {
-                songslist =datas;
-                Log.v("gpp", "Main文件夹大小:"+datas.size());
-            }
-        });
-        scanFile.CallbackScan(path+"/Music");
-    }
+//
+//    public void addsonglist() {
+//        String path="";
+//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//            path = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        }
+//        ScanFile scanFile=new ScanFile();
+//        scanFile.setCallBack(new ScanFile.CallBack() {
+//            @Override
+//            public void getData(ArrayList<Data> datas) {
+//                dblist =datas;
+//                Log.v("gpp", "Main文件夹大小:"+datas.size());
+//            }
+//        });
+//        scanFile.CallbackScan(path+"/Music");
+//    }
 
     @Override
     public void OnCommonClickListener(View v, int position) {
