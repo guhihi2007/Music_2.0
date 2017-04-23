@@ -7,6 +7,9 @@ package org.music_20.activity;
 public class Song extends Data<Song> {
     private String fall_name, size;
 
+    public Song(String name, String path) {
+        super(name,path);
+    }
     public Song(String name, String path, String type, String fall_name, String size) {
         super(name, path, type);
         this.fall_name = fall_name;

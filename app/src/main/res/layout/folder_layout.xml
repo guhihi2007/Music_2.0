@@ -45,11 +45,11 @@
 
         </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/vh_cb"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:visibility="invisible" />
+        <!--<CheckBox-->
+            <!--android:id="@+id/vh_cb"-->
+            <!--android:layout_width="60dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:visibility="invisible" />-->
     </LinearLayout>
 </RelativeLayout>

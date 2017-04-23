@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,12 +20,14 @@ import org.music_20.R;
 import org.music_20.base.CommonClickListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/4/18.
  */
 
 public class SearchActivtiy extends Activity implements InitView, CommonClickListener {
+    public static final int SearchMusicCode = 2;
     private RecyclerView recyclerView;
     public ArrayList<Data> list;
     private ImageView serach_btn, action_back;
@@ -33,7 +37,8 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
     private CheckDialog dialog;
     private SearchAdapter adapter;
     private Handler handler;
-
+    private String mp3 = ".mp3";
+    private String  playlist_name;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,8 +98,37 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
 
     @Override
     public void setListener() {
+        playlist_name=intent.getStringExtra("playlist_name");
         action_tv.setText(intent.getStringExtra("dirname"));
         serach_btn.setVisibility(View.INVISIBLE);
+        serach_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Song> chosesonglist = new ArrayList<>();
+                //遍历map，存入ArrayList
+                Map map = adapter.getChoseMap();
+                for (Object music : map.values()) {
+                    Song song = (Song) music;
+                    chosesonglist.add(song);
+                }
+                /**
+                 * 未存入数据库，未完待续
+                 */
+                Log.v("gpp", "选中歌曲,返回播放列表");
+                Intent back = new Intent();
+                Bundle bundle = new Bundle();
+//                bundle.putString("playlist_name",playlist_name);
+                bundle.putSerializable("song", chosesonglist);
+                back.putExtras(bundle);
+                back.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//设置activity启动模式，这里用的模式是回到已经启动过的activity界面，并清除他上面所有的activity
+                back.setClass(SearchActivtiy.this, SongListActivtiy.class);
+                back.putExtra("playlist_name", intent.getStringExtra("playlist_name"));
+                back.setClass(SearchActivtiy.this, SongListActivtiy.class);
+//                setResult(SearchMusicCode,back);
+                startActivity(back);
+//                finish();
+            }
+        });
         action_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,23 +139,32 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
 
     @Override
     public void OnCommonClickListener(View v, int position) {
-        String mp3 = ".mp3";
         String type = list.get(position).getType();
         String dirpath = list.get(position).getPath();
         String dirname = list.get(position).getName();
+        if (mp3.equals(type)) {
+            adapter.setSelected(position);//点击选中或不选中
+            return;
+        }
         Log.v("gpp", "Dir___OnCommonClickListener:" + dirpath);
-
-        if (mp3.equals(type)) return;
         Intent intent = new Intent();
         intent.setClass(this, SearchActivtiy.class);
         intent.putExtra("dirpath", dirpath);
         intent.putExtra("dirname", dirname);
-        Log.v("gpp", "进入文件夹:" + dirname);
+        intent.putExtra("playlist_name",playlist_name);
+        Log.v("gpp", "进入文件夹playlist_name:" + playlist_name);
         startActivity(intent);
     }
 
     @Override
     public boolean OnCommonLongClickListener(View v, int position) {
-        return false;
+        if (adapter.getHaxbox()) {
+            serach_btn.setImageResource(R.mipmap.ok);
+            serach_btn.setVisibility(View.VISIBLE);
+            adapter.setShowbox();//长按设置显示checkbox
+//        adapter.setSelected(position);//当前长按item被选中
+            adapter.notifyDataSetChanged();
+        }
+        return true;
     }
 }

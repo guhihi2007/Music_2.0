@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         viewList.add(View_2);
         viewList.add(View_3);
         viewList.add(View_4);
+
 //        CommonRecycleAdapter adapter = new SearchAdapter(this,this);
-//        adapter.setDatas(dblist);
 //        adapter.setItemListener(new RecycleAdapter.ItemListener() {
 //            @Override
 //            public void OnItemClickListener(View view, int position) {

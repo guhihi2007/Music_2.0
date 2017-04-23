@@ -3,6 +3,7 @@ package org.music_20.base;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,9 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     protected List<T> datas;
     private LayoutInflater layoutInflater;
     protected int LayoutID;
-    private Context context;
     protected MultiItemViewType<T> multiItemViewType;
+    protected SparseArray<Boolean> boxarray = new SparseArray<>();
+    protected boolean hasCheckbox;
 
     public CommonRecycleAdapter(Context context) {
         this.layoutInflater = LayoutInflater.from(context);
@@ -53,16 +55,15 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
             LayoutID = viewType;
         }
         View view = layoutInflater.inflate(LayoutID, parent, false);
-//        Log.v("gpp","===创建viewholder====");
         CommonViewHolder commonViewHolder = new CommonViewHolder(view);
         return commonViewHolder;
     }
 
     public void setDatas(List<T> datas) {
         this.datas = datas;
+        initNOselected();//设置box初始状态
         this.notifyDataSetChanged();
     }
-
     public void addData(List<T> datas) {
 //        this.datas.clear();
         this.datas = datas;
@@ -73,7 +74,7 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     //设置数据，调用抽象方法bindData，继承这个类实现bindData方法
     @Override
     public void onBindViewHolder(CommonViewHolder holder, int position) {
-        bindData(holder, datas.get(position));
+        bindData(holder, datas.get(position),position);
     }
 
     @Override
@@ -82,5 +83,13 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     }
 
     //抽象方法
-    protected abstract void bindData(CommonViewHolder holder, T data);
+    protected abstract void bindData(CommonViewHolder holder, T data,int position);
+
+
+    private void initNOselected() {
+        if (datas!=null)
+            for (int i=0;i<datas.size();i++) {
+                boxarray.put(i,false);
+            }
+    }
 }

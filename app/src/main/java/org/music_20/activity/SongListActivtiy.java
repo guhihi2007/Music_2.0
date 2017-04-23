@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
  */
 
 public class SongListActivtiy extends Activity implements InitView, View.OnClickListener, CommonClickListener {
+    public static final int SearchMusicCode = 2;
     private RecyclerView recyclerView;
     public ArrayList<Song> list;
     private ImageView search_btn, action_back;
@@ -32,7 +34,8 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
     private CheckDialog dialog;
     private SearchAdapter adapter;
     private Handler handler;
-    private String path;
+    private String path, playlist_name;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +64,12 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
 
     @Override
     public void setListener() {
-        action_tv.setText(intent.getStringExtra("dirname"));
+        playlist_name = intent.getStringExtra("dirname");
+        action_tv.setText(playlist_name);
+        if (intent.getSerializableExtra("song") != null) {
+            ArrayList<Data> songs = (ArrayList<Data>) intent.getSerializableExtra("song");
+            adapter.setDatas(songs);
+        }
         search_btn.setOnClickListener(this);
         action_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +77,6 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
                 finish();
             }
         });
-
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             path = Environment.getExternalStorageDirectory().getAbsolutePath();
         }
@@ -78,8 +85,9 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
     @Override
     public void OnCommonClickListener(View v, int position) {
 
-        //点击音乐后播放
-
+        /**
+         * 点击音乐后播放,未完待续
+         */
 
 //        String mp3 = ".mp3";
 //        String type = list.get(position).getType();
@@ -109,11 +117,25 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
                 break;
             case R.id.search_btn:
                 Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("playlist_name", playlist_name);
+                intent.putExtras(bundle);
                 intent.setClass(this, SearchActivtiy.class);
                 intent.putExtra("dirname", "添加歌曲");
                 intent.putExtra("dirpath", path);
+                intent.putExtra("playlist_name", playlist_name);
                 startActivity(intent);
+//                startActivityForResult(intent, SearchMusicCode);
                 break;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == resultCode) {
+            String result = data.getStringExtra("playlist_name");//从返回的activity Intent中取数据
+            Log.v("gpp", "数据返回添加到播放列表" +result);
+        }
+    }
+
 }

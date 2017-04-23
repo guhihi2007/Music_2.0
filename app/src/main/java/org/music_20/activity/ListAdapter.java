@@ -30,7 +30,7 @@ public class ListAdapter extends CommonRecycleAdapter<Data> implements MultiItem
     }
 
     @Override
-    protected void bindData(CommonViewHolder holder, Data data) {
+    protected void bindData(CommonViewHolder holder, Data data,int positon) {
         holder.setText(R.id.music_item_tv,data.getName());
         holder.setCommonClickListener(commonClickListener);
     }

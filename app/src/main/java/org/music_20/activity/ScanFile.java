@@ -3,6 +3,8 @@ package org.music_20.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -17,12 +19,12 @@ public class ScanFile {
     //接口回调成员变量
     private CallBack callBack;
     private ArrayList<Data> threadList;
-
     //开启线程扫描，并且把数据传给adapter
     public void startScan(final String path, final Handler handler, final CheckFileCallBack callBack) {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                callBack.checkCallBack(CheckFileCallBack.Result.doing);
                 threadList = scan(path);
                 Message msg = new Message();
                 Bundle bundle = new Bundle();
@@ -33,7 +35,6 @@ public class ScanFile {
             }
         }).start();
     }
-
     //回调返回结果
     public void CallbackScan(final String path) {
         new Thread(new Runnable() {

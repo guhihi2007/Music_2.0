@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,6 +54,12 @@ public class CommonViewHolder extends RecyclerView.ViewHolder implements View.On
     public CommonViewHolder setImageRes(int id,int resId){
         ImageView iv= (ImageView)getView(id);
         iv.setImageResource(resId);
+        return this;
+    }
+    public CommonViewHolder setVisibility(int id,int isVisiable){
+        CheckBox cb= (CheckBox)getView(id);
+        if (cb!=null)
+        cb.setVisibility(isVisiable);
         return this;
     }
     @Override
