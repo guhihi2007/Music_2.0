@@ -5,17 +5,23 @@ package org.music_20.activity;
  */
 
 public class Song extends Data<Song> {
-    private String fall_name, size;
-
+    private String fall_name, size,type;
     public Song(String name, String path) {
         super(name,path);
     }
-    public Song(String name, String path, String type, String fall_name, String size) {
+    public Song(String name, String path, String type, String size, String fall_name) {
         super(name, path, type);
         this.fall_name = fall_name;
         this.size = size;
     }
-
+    public Song(String name, String path, String type, String size) {
+        super(name, path, type);
+        this.size = size;
+    }
+//    public Song(String name, String path,  String size) {
+//        super(name, path);
+//        this.size = size;
+//    }
     public String getFall_name() {
         return fall_name;
     }

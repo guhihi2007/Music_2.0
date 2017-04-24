@@ -15,12 +15,13 @@ import android.widget.ImageView;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
 import org.music_20.R;
-import org.music_20.database.DB_ModifyPlayList;
+import org.music_20.database.modify.DB_ModifyPlayList;
+import org.music_20.database.modify.DB_ModifyPlayListContent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements InitView, View.OnClickListener ,CommonClickListener{
+public class MainActivity extends AppCompatActivity implements InitView, View.OnClickListener, CommonClickListener {
 
     private ImageView play, next, previous, model, list;
     private ViewPager vp;
@@ -122,36 +123,20 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             case R.id.model:
                 break;
             case R.id.list:
-                Log.v("gpp", "点击：list_btn");
-                DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this);
-                dblist =dbModifyPlayList.getPlayList();
-                Log.v("gpp", "dblist大小："+ (dblist ==null? 0: dblist.size()));
+                Log.v("gpp", "点击list_btn");
+                DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this,null);
+                dblist = dbModifyPlayList.getPlayList();//从数据库取播放列表数据
+                Log.v("gpp", "读取DB播放列表:" + (dblist == null ? null : dblist.size()));
                 Intent intent = new Intent();
                 intent.setClass(this, ListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("dblist", dblist);
+                bundle.putSerializable("dblist", dblist);//用bundle存储传递到下一个activity
                 intent.putExtras(bundle);
-                intent.putExtra("dirname", "播放列表");
+                intent.putExtra("title_name", "播放列表");
                 startActivity(intent);
                 break;
         }
     }
-//
-//    public void addsonglist() {
-//        String path="";
-//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//            path = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        }
-//        ScanFile scanFile=new ScanFile();
-//        scanFile.setCallBack(new ScanFile.CallBack() {
-//            @Override
-//            public void getData(ArrayList<Data> datas) {
-//                dblist =datas;
-//                Log.v("gpp", "Main文件夹大小:"+datas.size());
-//            }
-//        });
-//        scanFile.CallbackScan(path+"/Music");
-//    }
 
     @Override
     public void OnCommonClickListener(View v, int position) {

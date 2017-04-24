@@ -4,11 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,7 +13,8 @@ import android.widget.Toast;
 
 import org.music_20.base.InitView;
 import org.music_20.R;
-import org.music_20.database.DB_ModifyPlayList;
+import org.music_20.database.modify.DB_ModifyPlayList;
+import org.music_20.database.modify.DB_ModifyPlayListContent;
 
 
 /**
@@ -72,9 +69,9 @@ public class AddListAcitvity extends Activity implements InitView, View.OnClickL
                     return;
                 }
                 back.putExtra("list_name", input_name);
+                DB_ModifyPlayList modifyPlayList = new DB_ModifyPlayList(this,input_name);
+                modifyPlayList.add_Table();//添加新数据播放列表名称到数据库
                 this.setResult(RequestCode, back);
-                DB_ModifyPlayList modifyPlayList = new DB_ModifyPlayList(this);
-                modifyPlayList.addPlayList(input_name);//添加新数据到数据库
                 this.finish();
                 break;
         }

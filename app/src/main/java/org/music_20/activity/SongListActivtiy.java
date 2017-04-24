@@ -16,6 +16,9 @@ import android.widget.TextView;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
+import org.music_20.database.create.DB_CreatePlayListContent;
+import org.music_20.database.modify.DB_ModifyPlayList;
+import org.music_20.database.modify.DB_ModifyPlayListContent;
 
 import java.util.ArrayList;
 
@@ -34,7 +37,7 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
     private CheckDialog dialog;
     private SearchAdapter adapter;
     private Handler handler;
-    private String path, playlist_name;
+    public static String path, title_name;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,12 +67,12 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
 
     @Override
     public void setListener() {
-        playlist_name = intent.getStringExtra("dirname");
-        action_tv.setText(playlist_name);
-        if (intent.getSerializableExtra("song") != null) {
-            ArrayList<Data> songs = (ArrayList<Data>) intent.getSerializableExtra("song");
-            adapter.setDatas(songs);
-        }
+        title_name = intent.getStringExtra("title_name");
+        action_tv.setText(title_name);
+        DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this, title_name);
+        ArrayList dbsongs = dbModifyPlayList.getSongList();
+        Log.v("gpp", "进入Songlist，dbsongs大小:" + dbsongs.size());
+        adapter.setDatas(dbsongs);
         search_btn.setOnClickListener(this);
         action_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,13 +120,10 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
                 break;
             case R.id.search_btn:
                 Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putString("playlist_name", playlist_name);
-                intent.putExtras(bundle);
                 intent.setClass(this, SearchActivtiy.class);
                 intent.putExtra("dirname", "添加歌曲");
                 intent.putExtra("dirpath", path);
-                intent.putExtra("playlist_name", playlist_name);
+                intent.putExtra("title_name", title_name);
                 startActivity(intent);
 //                startActivityForResult(intent, SearchMusicCode);
                 break;
@@ -134,7 +134,7 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == resultCode) {
             String result = data.getStringExtra("playlist_name");//从返回的activity Intent中取数据
-            Log.v("gpp", "数据返回添加到播放列表" +result);
+            Log.v("gpp", "数据返回添加到播放列表" + result);
         }
     }
 

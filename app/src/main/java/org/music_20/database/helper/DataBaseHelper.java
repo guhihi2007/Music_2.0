@@ -1,8 +1,10 @@
-package org.music_20.database;
+package org.music_20.database.helper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import org.music_20.database.AbstractCreateDB;
 
 /**
  * Created by Administrator on 2017/4/22.

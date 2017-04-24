@@ -56,12 +56,11 @@ public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiIt
                 ((CheckBox) holder.getView(R.id.vh_cb)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        Log.v("gpp", "CheckBox被点击" + datas.get(position).getName());
                         if (isChecked) {
-                            Log.v("gpp", "添加到ChoseList");
+                            Log.v("gpp", "勾选："+datas.get(position).getName());
                             ChoseList.put(position, (Song) datas.get(position));
                         } else {
-                            Log.v("gpp", "从ChoseList删除");
+                            Log.v("gpp", "删除："+datas.get(position).getName());
                             ChoseList.remove(position);
                         }
                         //状态存入SparseArray记录

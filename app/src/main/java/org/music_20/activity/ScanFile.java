@@ -60,7 +60,7 @@ public class ScanFile {
                     String filepath = files[i].getAbsolutePath();
                     int count = scan(filepath).size();
                     String type = "dir";
-                    data = new Folder(filename, filepath,count,type);
+                    data = new Folder(filename, filepath,type,count);
                     list.add(data);
                 } else if (files[i].isFile() && files[i].getName().endsWith(".mp3") && !(files[i].isHidden())) {
                     String fall_name = files[i].getName();
@@ -69,7 +69,7 @@ public class ScanFile {
                     long length = files[i].length();
                     String size = calculateSizeMB(length);
                     String type = ".mp3";
-                    data = new Song(name, songpath,type,fall_name, size);
+                    data = new Song(name, songpath,type, size,fall_name);
                     list.add(data);
                 }
             }

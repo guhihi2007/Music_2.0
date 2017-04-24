@@ -1,23 +1,23 @@
 package org.music_20.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
+import org.music_20.database.modify.DB_ModifyPlayList;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -38,7 +38,8 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
     private SearchAdapter adapter;
     private Handler handler;
     private String mp3 = ".mp3";
-    private String  playlist_name;
+    public static String  playlist_name;
+    private Context context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +48,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
         findView();
         setListener();
         serachData();
+        this.context=this;
     }
 
     private void serachData() {
@@ -70,7 +72,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
                             break;
                         case done:
                             dialog.dismiss();
-                            Log.v("gpp", "对话框dismiss");
+//                            Log.v("gpp", "对话框dismiss");
                             break;
                     }
                 }
@@ -98,7 +100,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
 
     @Override
     public void setListener() {
-        playlist_name=intent.getStringExtra("playlist_name");
+        playlist_name=intent.getStringExtra("title_name");
         action_tv.setText(intent.getStringExtra("dirname"));
         serach_btn.setVisibility(View.INVISIBLE);
         serach_btn.setOnClickListener(new View.OnClickListener() {
@@ -110,23 +112,21 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
                 for (Object music : map.values()) {
                     Song song = (Song) music;
                     chosesonglist.add(song);
+                    DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(SearchActivtiy.this,playlist_name);
+                    dbModifyPlayList.add_songToList(song);
                 }
                 /**
                  * 未存入数据库，未完待续
                  */
-                Log.v("gpp", "选中歌曲,返回播放列表");
                 Intent back = new Intent();
                 Bundle bundle = new Bundle();
-//                bundle.putString("playlist_name",playlist_name);
                 bundle.putSerializable("song", chosesonglist);
                 back.putExtras(bundle);
                 back.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//设置activity启动模式，这里用的模式是回到已经启动过的activity界面，并清除他上面所有的activity
+                back.putExtra("title_name", playlist_name);
                 back.setClass(SearchActivtiy.this, SongListActivtiy.class);
-                back.putExtra("playlist_name", intent.getStringExtra("playlist_name"));
-                back.setClass(SearchActivtiy.this, SongListActivtiy.class);
-//                setResult(SearchMusicCode,back);
                 startActivity(back);
-//                finish();
+//                Log.v("gpp", "返回播放列表："+playlist_name);
             }
         });
         action_back.setOnClickListener(new View.OnClickListener() {
@@ -146,13 +146,13 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
             adapter.setSelected(position);//点击选中或不选中
             return;
         }
-        Log.v("gpp", "Dir___OnCommonClickListener:" + dirpath);
         Intent intent = new Intent();
         intent.setClass(this, SearchActivtiy.class);
         intent.putExtra("dirpath", dirpath);
         intent.putExtra("dirname", dirname);
-        intent.putExtra("playlist_name",playlist_name);
-        Log.v("gpp", "进入文件夹playlist_name:" + playlist_name);
+        intent.putExtra("title_name",playlist_name);
+        Log.v("gpp", "进入文件夹:" + dirname);
+//        Log.v("gpp", "发送播放列表来源:" + playlist_name);
         startActivity(intent);
     }
 
@@ -167,4 +167,5 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
         }
         return true;
     }
+
 }
