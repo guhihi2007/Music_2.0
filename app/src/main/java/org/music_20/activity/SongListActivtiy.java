@@ -33,10 +33,7 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
     private ImageView search_btn, action_back;
     private TextView action_tv;
     private Intent intent;
-    private ScanFile.CheckFileCallBack callback;
-    private CheckDialog dialog;
     private SearchAdapter adapter;
-    private Handler handler;
     public static String path, title_name;
 
     @Override
@@ -46,12 +43,7 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
         intent = getIntent();
         findView();
         setListener();
-//        serachData();
     }
-
-//    private void serachData() {
-//        //读取数据库保存的song
-//    }
 
     @Override
     public void findView() {
@@ -67,11 +59,14 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
 
     @Override
     public void setListener() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        }
         title_name = intent.getStringExtra("title_name");
         action_tv.setText(title_name);
         DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this, title_name);
         ArrayList dbsongs = dbModifyPlayList.getSongList();
-        Log.v("gpp", "播放列表:"+title_name+"，歌曲数量:" + dbsongs.size());
+//        Log.v("gpp", "播放列表:"+title_name+"，歌曲数量:" + dbsongs.size());
         adapter.setDatas(dbsongs);
         search_btn.setOnClickListener(this);
         action_back.setOnClickListener(new View.OnClickListener() {
@@ -80,9 +75,6 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
                 finish();
             }
         });
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        }
     }
 
     @Override
@@ -91,20 +83,6 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
         /**
          * 点击音乐后播放,未完待续
          */
-
-//        String mp3 = ".mp3";
-//        String type = list.get(position).getType();
-//        String dirpath = list.get(position).getPath();
-//        String dirname = list.get(position).getName();
-//        Log.v("gpp", "Dir___OnCommonClickListener:" + dirpath);
-//
-//        if (mp3.equals(type)) return;
-//        Intent intent = new Intent();
-//        intent.setClass(this, SongListActivtiy.class);
-//        intent.putExtra("dirpath", dirpath);
-//        intent.putExtra("dirname", dirname);
-//        Log.v("gpp", "进入文件夹:" + dirname);
-//        startActivity(intent);
     }
 
     @Override

@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.music_20.R;
 
 /**
  * Created by Administrator on 2017/4/19.
@@ -22,7 +25,7 @@ public class CommonViewHolder extends RecyclerView.ViewHolder implements View.On
 
     public CommonViewHolder(View itemView) {
         super(itemView);
-        this.MyItemView=itemView;
+        this.MyItemView = itemView;
         //存储view
         viewSparseArray = new SparseArray<>();
         //给itemview添加监听
@@ -42,26 +45,35 @@ public class CommonViewHolder extends RecyclerView.ViewHolder implements View.On
             view = MyItemView.findViewById(viewId);
             viewSparseArray.put(viewId, view);
         }
-        return (T)view;
+        return (T) view;
     }
 
-    public CommonViewHolder setText(int id, CharSequence sequence){
-        TextView tv = (TextView) getView(id);
-        tv.setText(sequence);
+    public CommonViewHolder setText(int id, CharSequence sequence) {
+        View view = getView(id);
+        if (view instanceof TextView) {
+            TextView tv = (TextView) getView(id);
+            tv.setText(sequence);
+        }
+        if (view instanceof EditText) {
+            EditText text = (EditText) getView(id);
+            text.setText(sequence);
+        }
         return this;
     }
 
-    public CommonViewHolder setImageRes(int id,int resId){
-        ImageView iv= (ImageView)getView(id);
+    public CommonViewHolder setImageRes(int id, int resId) {
+        ImageView iv = (ImageView) getView(id);
         iv.setImageResource(resId);
         return this;
     }
-    public CommonViewHolder setVisibility(int id,int isVisiable){
-        CheckBox cb= (CheckBox)getView(id);
-        if (cb!=null)
-        cb.setVisibility(isVisiable);
+
+    public CommonViewHolder setVisibility(int id, int isVisiable) {
+        CheckBox cb = (CheckBox) getView(id);
+        if (cb != null)
+            cb.setVisibility(isVisiable);
         return this;
     }
+
     @Override
     public void onClick(View v) {
         commonClickListener.OnCommonClickListener(v, getAdapterPosition());

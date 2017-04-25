@@ -28,10 +28,11 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
     private ImageView back_btn, addlist_btn;
     private RecyclerView recyclerView;
     public static String title_name=null;
-    private ArrayList<Folder> dblist;
+    private  ArrayList<Folder> dblist;
     private TextView action_tv;
     private CommonRecycleAdapter adapter;
     private Intent intent;
+    private FloatingActionButton set_btn;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,7 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
         addlist_btn = (ImageView) findViewById(R.id.search_btn);
         recyclerView = (RecyclerView) findViewById(R.id.list_reclv);
         action_tv =(TextView) findViewById(R.id.action_tv);
+        set_btn=(FloatingActionButton)findViewById(R.id.set_btn);
     }
 
     @Override
@@ -56,10 +58,12 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
         title_name=intent.getStringExtra("title_name");
         action_tv.setText(title_name);
         back_btn.setOnClickListener(this);
+        set_btn.setOnClickListener(this);
         addlist_btn.setImageResource(R.mipmap.add);
         addlist_btn.setOnClickListener(this);
         adapter = new ListAdapter(this,this);
         adapter.setDatas(dblist);//把数据库拿出的list添加到adapter
+        if (dblist.size()>0)set_btn.setVisibility(View.VISIBLE);
         RecyclerView.LayoutManager manager = new GridLayoutManager(this,4);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
@@ -77,6 +81,15 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
                 add.setClass(this,AddListAcitvity.class);
                 startActivityForResult(add,RequestCode);//startActivityForResult
                 break;
+            case R.id.set_btn:
+                Intent set = new Intent();
+                set.setClass(this,SetActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("dblist",dblist);
+//                set.putExtras(bundle);
+                set.putExtra("title_name", "设置");
+                startActivity(set);
+                break;
         }
     }
 
@@ -92,6 +105,8 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
 
     @Override
     public boolean OnCommonLongClickListener(View v, int position) {
+
+
         return false;
     }
 
@@ -102,6 +117,7 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
         Folder file = new Folder(result);
         dblist.add(file);
         adapter.setDatas(dblist);
+        if (dblist.size()>0)set_btn.setVisibility(View.VISIBLE);
         Log.v("gpp", "新建播放列表后List大小:" + dblist.size());
     }
 }

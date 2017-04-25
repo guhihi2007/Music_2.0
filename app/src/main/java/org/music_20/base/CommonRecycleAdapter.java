@@ -25,7 +25,7 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     protected MultiItemViewType<T> multiItemViewType;
     protected SparseArray<Boolean> boxarray = new SparseArray<>();
     protected boolean hasCheckbox;
-
+    protected View footView;
     public CommonRecycleAdapter(Context context) {
         this.layoutInflater = LayoutInflater.from(context);
     }
