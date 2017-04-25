@@ -46,12 +46,12 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
         intent = getIntent();
         findView();
         setListener();
-        serachData();
+//        serachData();
     }
 
-    private void serachData() {
-        //读取数据库保存的song
-    }
+//    private void serachData() {
+//        //读取数据库保存的song
+//    }
 
     @Override
     public void findView() {
@@ -71,7 +71,7 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
         action_tv.setText(title_name);
         DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this, title_name);
         ArrayList dbsongs = dbModifyPlayList.getSongList();
-        Log.v("gpp", "进入Songlist，dbsongs大小:" + dbsongs.size());
+        Log.v("gpp", "播放列表:"+title_name+"，歌曲数量:" + dbsongs.size());
         adapter.setDatas(dbsongs);
         search_btn.setOnClickListener(this);
         action_back.setOnClickListener(new View.OnClickListener() {

@@ -46,11 +46,11 @@ public class DB_ModifyPlayList {
         cv.put(DB_Info.TABLE_PALY_LIST_KEY_2, list_content);
         database.insert(mTableName, null, cv);
         add_ListContent(list_content);
+        Log.v("gpp", "新建playlist:"+list_name+",listcontent:"+list_content);
         i++;
     }
 
     private void add_ListContent(String list_content) {
-        Log.v("gpp", LIST_CONTENT + "");
         String sql = "CREATE TABLE IF NOT EXISTS " + list_content + " ( _ID INTEGER PRIMARY KEY," + DB_Info.TABLE_KEY_1 + " TEXT NOT NULL ," + DB_Info.TABLE_KEY_2 + " TEXT NOT NULL," + DB_Info.TABLE_KEY_3 + " TEXT NOT NULL," + DB_Info.TABLE_KEY_4 + " TEXT NOT NULL)";
         database.execSQL(sql);
         database.close();
@@ -75,10 +75,9 @@ public class DB_ModifyPlayList {
         ArrayList<Folder> list = new ArrayList<>();
         Cursor cursor = database.query(mTableName, null, null, null, null, null, null);
         while (cursor.moveToNext()) {
-            Folder folder = new Folder();
             int columnIndex = cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_1);//获取list_name所在的列下标
             String values = cursor.getString(columnIndex);//根据所在列，拿到游标所在的数据values
-            folder.setName(values);
+            Folder folder = new Folder(values);
             list.add(folder);
         }
         if (cursor != null) cursor.close();//查询完关闭游标
@@ -99,13 +98,14 @@ public class DB_ModifyPlayList {
 
         database.insert(LIST_CONTENT, null, cv);
         Log.v("gpp", "添加歌曲到表:" + LIST_CONTENT);
-        Log.v("gpp", "添加歌曲:" + values_1 + "+||+" + values_2 + "+||+" + values_3+ "+||+" + values_4);
+        Log.v("gpp", "添加歌曲到数据库:" + values_1 + "||" + values_2 + "||" + values_3+ "||" + values_4);
         database.close();
     }
 
     public ArrayList getSongList() {
         ArrayList<Song> list = new ArrayList<>();
         Cursor cursor = database.query(LIST_CONTENT, null, null, null, null, null, null);
+        Log.v("gpp", "取出歌曲的表listcontent:"+LIST_CONTENT);
         while (cursor.moveToNext()) {
             int name = cursor.getColumnIndex(DB_Info.TABLE_KEY_1);
             int path = cursor.getColumnIndex(DB_Info.TABLE_KEY_2);
@@ -114,10 +114,11 @@ public class DB_ModifyPlayList {
 
             String getName = cursor.getString(name);
             String getPath = cursor.getString(path);
-            String gettype = cursor.getString(type);
-            String getsize = cursor.getString(size);
-
-            Song song = new Song(getName, getPath,gettype,getsize);
+            String getSize = cursor.getString(size);
+            String getTpye =cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_KEY_3));
+            Log.v("gpp", "数据库取出歌曲:" + getName + "||" + getPath + "||" + getTpye+ "||" + getSize);
+            Song song = new Song(getName, getPath,getSize);
+//            Log.v("gpp", "添加歌曲到list:" + song.getName() + "||" + song.getPath() + "||" + song.getType()+ "||" + song.getSize());
             list.add(song);
         }
         if (cursor != null) cursor.close();//查询完关闭游标

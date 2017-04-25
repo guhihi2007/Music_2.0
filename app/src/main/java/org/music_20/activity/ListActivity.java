@@ -99,8 +99,7 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data==null) return;
         String result = data.getStringExtra("list_name");//从返回的activity Intent中取数据
-        Folder file = new Folder();
-        file.setName(result);
+        Folder file = new Folder(result);
         dblist.add(file);
         adapter.setDatas(dblist);
         Log.v("gpp", "新建播放列表后List大小:" + dblist.size());

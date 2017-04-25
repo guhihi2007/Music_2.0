@@ -5,27 +5,19 @@ package org.music_20.activity;
  */
 
 public class Song extends Data<Song> {
-    private String fall_name, size,type;
-    public Song(String name, String path) {
-        super(name,path);
+    private String fall_name, size;
+    public Song(String name, String path, String size) {
+        super(name, path, ".mp3");
+        this.size = size;
     }
-    public Song(String name, String path, String type, String size, String fall_name) {
-        super(name, path, type);
+    public Song(String name, String path, String size, String fall_name) {
+        this(name, path, ".mp3");
+        this.size = size;
         this.fall_name = fall_name;
-        this.size = size;
     }
-    public Song(String name, String path, String type, String size) {
-        super(name, path, type);
-        this.size = size;
-    }
-//    public Song(String name, String path,  String size) {
-//        super(name, path);
-//        this.size = size;
-//    }
     public String getFall_name() {
         return fall_name;
     }
-
     @Override
     protected String givefall_name() {
         return fall_name;
@@ -39,21 +31,15 @@ public class Song extends Data<Song> {
 
     @Override
     protected String giveSize() {
-        return getSize();
+        return size;
     }
 
     @Override
     protected int giveCount() {
         return 0;
     }
-
-    @Override
-    public void setSize(String size) {
-        this.size = size;
-    }
-
     @Override
     protected String giveType() {
-        return type;
+        return ".mp3";
     }
 }

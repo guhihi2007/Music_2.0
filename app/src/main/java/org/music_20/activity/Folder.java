@@ -6,11 +6,11 @@ package org.music_20.activity;
 
 public class Folder extends Data<Folder> {
     private int count;
-    public Folder(){
-        super();
+    public Folder(String name){
+        super(name);
     }
-    public Folder(String name, String path,String type,int count) {
-        super(name, path,type);
+    public Folder(String name, String path,int count) {
+        super(name, path,".dir");
         this.count = count;
     }
 

@@ -43,7 +43,7 @@ public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiIt
     protected void bindData(final CommonViewHolder holder, final Data data, final int position) {
         String type = ".mp3";
         if (type.equals(data.getType())) {
-            holder.setText(R.id.vh_tv, data.getFall_name());//MP3格式是tv的显示
+            holder.setText(R.id.vh_tv, data.getName());//MP3格式是tv的显示
             holder.setText(R.id.vh_tv2, data.getSize());
         } else {
             holder.setText(R.id.vh_tv, data.getName());//文件夹格式是的显示
