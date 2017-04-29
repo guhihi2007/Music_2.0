@@ -26,6 +26,7 @@
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity android:name=".activity.SongListActivtiy" />
         <activity android:name=".activity.SetActivity" />
+        <service android:name=".service.CoreService" />
     </application>
 
 </manifest>

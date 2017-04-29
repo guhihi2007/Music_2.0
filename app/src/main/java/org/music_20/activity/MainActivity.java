@@ -1,6 +1,9 @@
 package org.music_20.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +19,7 @@ import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.database.modify.DB_ModifyPlayList;
-import org.music_20.database.modify.DB_ModifyPlayListContent;
+import org.music_20.service.CoreService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     private RecyclerView RLView_1, RLView_2, RLView_3, RLView_4;
     private View View_1, View_2, View_3, View_4;
     private ArrayList<Folder> dblist;
+    private CoreService coreService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         setContentView(R.layout.activity_main);
         findView();
         setListener();
+        startCoreService();
     }
 
 
@@ -115,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.play:
+                Log.v("gpp", "点击play_btn");
                 break;
             case R.id.next:
                 break;
@@ -124,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
                 break;
             case R.id.list:
                 Log.v("gpp", "点击list_btn");
-                DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this,null);
+                DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this, null);
                 dblist = dbModifyPlayList.getPlayList();//从数据库取播放列表数据
                 Log.v("gpp", "读取DB播放列表:" + (dblist == null ? null : dblist.size()));
                 Intent intent = new Intent();
@@ -147,4 +153,25 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     public boolean OnCommonLongClickListener(View v, int position) {
         return false;
     }
+
+    private void startCoreService() {
+        final Intent server = new Intent();
+        server.setClass(this, CoreService.class);
+        bindService(server, conn,BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            CoreService.CoreServiceBinder serviceBinder= (CoreService.CoreServiceBinder)service;
+            coreService= serviceBinder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+
 }
