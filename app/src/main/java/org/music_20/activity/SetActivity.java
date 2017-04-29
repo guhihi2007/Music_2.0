@@ -47,9 +47,7 @@ public class SetActivity extends Activity implements InitView, View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_btn:
-//                Intent add = new Intent();
-//                add.setClass(this, AddListAcitvity.class);
-//                startActivityForResult(add, RequestCode);//startActivityForResult
+
                 break;
             case R.id.back_btn:
                 finish();
