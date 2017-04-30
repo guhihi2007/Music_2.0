@@ -32,6 +32,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     private int positon, temp = 0;
     private boolean isListrecycle = true, isRandom = false;
     private MyBroadcastReceiver receiver;
+    private pauseCallBack pauseCallBack;
 
     @Override
     public void onCreate() {
@@ -126,20 +127,27 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void ringing() {
         pause();
+        pauseCallBack.paused();
     }
 
     @Override
     public void offhook() {
         pause();
-        //此回调，来电会立即调用，接听后也会调用，基本上无用
+        pauseCallBack.paused();
     }
 
     @Override
     public void idle() {
-        //挂机后,拔耳机后都调用
-//        play();
+    //挂机后,拔耳机后都调用
     }
 
+    public void setPauseCallBack(MusicService.pauseCallBack pauseCallBack) {
+        this.pauseCallBack = pauseCallBack;
+    }
+
+    public interface pauseCallBack {
+        void paused();
+    }
 
     public class CoreServiceBinder extends Binder {
         public MusicService getService() {
@@ -149,7 +157,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
 
     public void play() {
-            player.start();
+        player.start();
     }
 
     public void pause() {

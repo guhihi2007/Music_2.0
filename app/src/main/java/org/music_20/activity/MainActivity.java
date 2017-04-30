@@ -25,7 +25,7 @@ import org.music_20.service.MusicService;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements InitView, View.OnClickListener, CommonClickListener {
+public class MainActivity extends AppCompatActivity implements InitView, View.OnClickListener, CommonClickListener{
 
     private ImageView play, next, previous, model, list;
     private RecyclerView mani_recycle;
@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         if (songlist != null)
             play.setImageResource(R.mipmap.pause);
     }
-
 
     @Override
     public void OnCommonClickListener(View v, int position) {
@@ -168,8 +167,14 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.CoreServiceBinder serviceBinder = (MusicService.CoreServiceBinder) service;
             musicService = serviceBinder.getService();
-        }
+            musicService.setPauseCallBack(new MusicService.pauseCallBack() {
+                @Override
+                public void paused() {
+                    play.setImageResource(R.mipmap.paly);
+                }
+            });
 
+        }
         @Override
         public void onServiceDisconnected(ComponentName name) {
             musicService = null;
@@ -181,4 +186,5 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         super.onDestroy();
         unbindService(conn);
     }
+
 }
