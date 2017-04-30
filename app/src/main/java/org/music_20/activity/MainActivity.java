@@ -119,9 +119,16 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
                 }
                 break;
             case R.id.next:
-                musicService.next();
+                if (songlist != null) {
+                    musicService.next();
+                    play.setImageResource(R.mipmap.pause);
+                }
                 break;
             case R.id.previous:
+                if (songlist != null) {
+                    musicService.pre();
+                    play.setImageResource(R.mipmap.pause);
+                }
                 break;
             case R.id.model:
                 break;

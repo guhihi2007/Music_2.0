@@ -129,20 +129,14 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void next() {
         temp = positon;
         Log.v("gpp", "上一曲:" + temp + " 结束");
-        if (temp == list.size() - 1 || positon>list.size()-1) {
+        if (temp == list.size() - 1 || positon > list.size() - 1) {
             positon = -1;
             temp = 0;
         }
         try {
             if (temp < list.size() - 1) {
                 positon++;
-//                if (positon > list.size() - 1) {
-//                    positon = -1;
-//                    temp = 0;
-//
-//                } else {
-                    temp = positon;
-//                }
+                temp = positon;
                 Log.v("gpp", "下一曲:" + temp + " 开始播放");
                 player.reset();
                 player.setDataSource(list.get(temp).getPath());
@@ -155,8 +149,25 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public void pre() {
-        if (player.isPlaying()) {
-            player.release();
+        temp = positon;
+        Log.v("gpp", "上一曲:" + temp + " 结束");
+        try {
+            if (temp < list.size()) {
+                positon--;
+                if (positon == -1) {
+                    positon = list.size() - 1;
+                    temp = list.size() - 1;
+                } else {
+                    temp = positon;
+                }
+                Log.v("gpp", "下一曲:" + temp + " 开始播放");
+                player.reset();
+                player.setDataSource(list.get(temp).getPath());
+                player.prepare();
+                player.start();
+            }
+        } catch (IOException e) {
+            Log.v("gpp", "song.getPath获取为空");
         }
     }
 }
