@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.CommonRecycleAdapter;
@@ -131,6 +132,25 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
                 }
                 break;
             case R.id.model:
+                if (musicService.isListrecycle()) {
+                    musicService.setListrecycle(false);
+                    musicService.setLoop(true);
+                    model.setImageResource(R.mipmap.single);
+                    Toast.makeText(this, "单曲循环", Toast.LENGTH_LONG);
+
+                } else if (musicService.isLoop()) {
+                    musicService.setLoop(false);
+                    musicService.setRandom(true);
+                    model.setImageResource(R.mipmap.random);
+                    Toast.makeText(this, "随机播放", Toast.LENGTH_LONG);
+
+                } else if (musicService.isRandom()) {
+                    musicService.setRandom(false);
+                    musicService.setListrecycle(true);
+                    model.setImageResource(R.mipmap.recycle);
+                    Toast.makeText(this, "列表循环", Toast.LENGTH_LONG);
+
+                }
                 break;
             case R.id.list:
                 Log.v("gpp", "点击list_btn");

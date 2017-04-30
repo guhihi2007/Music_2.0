@@ -89,7 +89,7 @@
             <ImageView
                 android:id="@+id/play"
                 android:layout_width="40dp"
-                android:layout_height="50dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:src="@mipmap/play"/>
