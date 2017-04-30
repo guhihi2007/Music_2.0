@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,9 +16,8 @@ import android.widget.TextView;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
-import org.music_20.database.create.DB_CreatePlayListContent;
 import org.music_20.database.modify.DB_ModifyPlayList;
-import org.music_20.database.modify.DB_ModifyPlayListContent;
+import org.music_20.service.MusicService;
 
 import java.util.ArrayList;
 
@@ -54,6 +53,7 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
         adapter = new SearchAdapter(this, this);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
     }
 
@@ -65,9 +65,8 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
         title_name = intent.getStringExtra("title_name");
         action_tv.setText(title_name);
         DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this, title_name);
-        ArrayList dbsongs = dbModifyPlayList.getSongList();
-//        Log.v("gpp", "播放列表:"+title_name+"，歌曲数量:" + dbsongs.size());
-        adapter.setDatas(dbsongs);
+        list = dbModifyPlayList.getSongList();
+        adapter.setSong(list);
         search_btn.setOnClickListener(this);
         action_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,8 +80,29 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
     public void OnCommonClickListener(View v, int position) {
 
         /**
-         * 点击音乐后播放,未完待续
+         * 点击音乐后播放,回到控制页面
          */
+//        String name = list.get(position).getName();
+//        Song song = list.get(position);
+
+//        Log.v("gpp", "点击音乐:" + name);
+
+        Intent serviceIntent = new Intent();
+        serviceIntent.setClass(this, MusicService.class);
+        Bundle serviceBundle = new Bundle();
+        serviceBundle.putSerializable("play_list", list);
+        serviceIntent.putExtras(serviceBundle);
+        serviceIntent.putExtra("position",position);
+        startService(serviceIntent);
+
+        Intent activity = new Intent();
+        activity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.setClass(this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("play_list", list);
+        activity.putExtras(bundle);
+        startActivity(activity);
+
     }
 
     @Override

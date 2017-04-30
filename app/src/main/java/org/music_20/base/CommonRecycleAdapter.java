@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.music_20.activity.Data;
+import org.music_20.activity.Song;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,11 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
 
     public void setDatas(List<T> datas) {
         this.datas = datas;
+        initNOselected();//设置box初始状态
+        this.notifyDataSetChanged();
+    }
+    public void setSong(List<Song> datas) {
+        this.datas = (List<T>) datas;
         initNOselected();//设置box初始状态
         this.notifyDataSetChanged();
     }

@@ -17,6 +17,7 @@ public class DB_Info {
     /**
      * 表二:播放列表下的歌曲
      */
+    public static final String TABLE_KEY_0="_ID";
     public static final String TABLE_KEY_1="song_name";//每个播放列表，歌曲名键
     public static final String TABLE_KEY_2="song_path";//每个播放列表，歌曲路径键
     public static final String TABLE_KEY_3="song_type";//每个播放列表，歌曲大小键
