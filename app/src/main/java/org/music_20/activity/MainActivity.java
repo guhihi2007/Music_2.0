@@ -72,12 +72,6 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         adapter.setDatas(songlist);
         if (songlist != null)
             play.setImageResource(R.mipmap.pause);
-/**
- * 注册来电广播
- */
-//        IntentFilter call = new IntentFilter();
-//        call.addAction();
-
     }
 
 
@@ -136,19 +130,20 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
                     musicService.setListrecycle(false);
                     musicService.setLoop(true);
                     model.setImageResource(R.mipmap.single);
-                    Toast.makeText(this, "单曲循环", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "单曲循环", Toast.LENGTH_LONG).show();
 
                 } else if (musicService.isLoop()) {
                     musicService.setLoop(false);
                     musicService.setRandom(true);
                     model.setImageResource(R.mipmap.random);
-                    Toast.makeText(this, "随机播放", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "随机播放", Toast.LENGTH_LONG).show();
 
                 } else if (musicService.isRandom()) {
                     musicService.setRandom(false);
                     musicService.setListrecycle(true);
                     model.setImageResource(R.mipmap.recycle);
-                    Toast.makeText(this, "列表循环", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "列表循环", Toast.LENGTH_LONG).show();
+
 
                 }
                 break;

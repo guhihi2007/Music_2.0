@@ -1,11 +1,16 @@
 package org.music_20.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.music_20.activity.Song;
@@ -14,23 +19,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static android.provider.Settings.System.ALARM_ALERT;
+
 /**
  * Created by Administrator on 2017/4/29.
  */
 
-public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
+public class MusicService extends Service implements MediaPlayer.OnCompletionListener, ReceiverCallBack {
     private MediaPlayer player;
     private ArrayList<Song> list;
     private Song song;
     private int positon, temp = 0;
     private boolean isListrecycle = true, isRandom = false;
+    private MyBroadcastReceiver receiver;
 
     @Override
     public void onCreate() {
         super.onCreate();
         player = new MediaPlayer();
         player.setOnCompletionListener(this);
+        receiver = new MyBroadcastReceiver();
         Log.v("gpp", "MusicService启动");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.intent.action.PHONE_STATE");
+        filter.addAction(ALARM_ALERT);
+        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        registerReceiver(receiver, filter);
+        Log.v("gpp", "注册电话监听" + player);
+        receiver.setCallBack(this);
     }
 
     @Override
@@ -96,13 +112,32 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void onDestroy() {
         player.release();
         player = null;
+        unregisterReceiver(receiver);
         super.onDestroy();
     }
+
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return new CoreServiceBinder();
+    }
+
+    @Override
+    public void ringing() {
+        pause();
+    }
+
+    @Override
+    public void offhook() {
+        pause();
+        //此回调，来电会立即调用，接听后也会调用，基本上无用
+    }
+
+    @Override
+    public void idle() {
+        //挂机后,拔耳机后都调用
+//        play();
     }
 
 
@@ -114,11 +149,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
 
     public void play() {
-        player.start();
+            player.start();
     }
 
     public void pause() {
-        player.pause();
+        if (player.isPlaying())
+            player.pause();
     }
 
     private void startPlay(String path) {
@@ -140,26 +176,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         Log.v("gpp", "temp:" + temp);
         String path = list.get(temp).getPath();
         startPlay(path);
-
-//        temp = positon;
-//        Log.v("gpp", "上一曲:" + temp + " 结束");
-//        if (temp == list.size() - 1 || positon > list.size() - 1) {
-//            positon = -1;
-//            temp = 0;
-//        }
-//        try {
-//            if (temp < list.size() - 1) {
-//                positon++;
-//                temp = positon;
-//                Log.v("gpp", "下一曲:" + temp + " 开始播放");
-//                player.reset();
-//                player.setDataSource(list.get(temp).getPath());
-//                player.prepare();
-//                player.start();
-//            }
-//        } catch (IOException e) {
-//            Log.v("gpp", "song.getPath获取为空");
-//        }
     }
 
     public void pre() {
@@ -169,26 +185,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         Log.v("gpp", "temp:" + temp);
         String path = list.get(temp).getPath();
         startPlay(path);
-//        temp = positon;
-//        Log.v("gpp", "上一曲:" + temp + " 结束");
-//        try {
-//            if (temp < list.size()) {
-//                positon--;
-//                if (positon == -1) {
-//                    positon = list.size() - 1;
-//                    temp = list.size() - 1;
-//                } else {
-//                    temp = positon;
-//                }
-//                Log.v("gpp", "下一曲:" + temp + " 开始播放");
-//                player.reset();
-//                player.setDataSource(list.get(temp).getPath());
-//                player.prepare();
-//                player.start();
-//            }
-//        } catch (IOException e) {
-//            Log.v("gpp", "song.getPath获取为空");
-//        }
     }
 
 
@@ -221,4 +217,21 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             return player.isPlaying();
         return false;
     }
+
+//    class MyBroadcastReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            TelephonyManager manager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
+//            int status = manager.getCallState();
+//            switch (status) {
+//                case TelephonyManager.CALL_STATE_RINGING:
+//                    Log.v("gpp","来电了"+player);
+//                    player.pause();
+//                case TelephonyManager.CALL_STATE_IDLE:
+//                    Log.v("gpp","空闲了"+player);
+//                    player.start();
+//                    break;
+//            }
+//        }
+//    }
 }
