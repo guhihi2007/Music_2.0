@@ -10,7 +10,8 @@ public class DB_Info {
     /**
      * 表一:播放列表
      */
-    public static final String TABLE_NAME = "Play_List";//播放列表表名
+    public static final String TABLE_NAME = "PLAY_LIST";//播放列表表名
+    public static final String TABLE_PALY_LIST_KEY_0 = "_ID";
     public static final String TABLE_PALY_LIST_KEY_1 = "LIST_NAME";//播放列表,表名键
     public static final String TABLE_PALY_LIST_KEY_2 = "LIST_CONTENT";//播放列表,表名键
 

@@ -40,7 +40,7 @@ public class DB_ModifyPlayList {
     }
 
     public void add_Table() {
-        String list_content = "playlist_" + i + "";
+        String list_content = "content_" + getRows() + "";
         ContentValues cv = new ContentValues();
         cv.put(DB_Info.TABLE_PALY_LIST_KEY_1, list_name);
         cv.put(DB_Info.TABLE_PALY_LIST_KEY_2, list_content);
@@ -56,6 +56,12 @@ public class DB_ModifyPlayList {
         database.close();
     }
 
+    private int getRows() {
+        Cursor cursor = database.query(mTableName, null, null, null, null, null, null);
+        int rows = cursor.getCount();
+        return rows;
+    }
+
     public String getListContent() {
         String List_Content = "";
         Cursor cursor = database.query(mTableName, null, null, null, null, null, null);
@@ -66,6 +72,9 @@ public class DB_ModifyPlayList {
                 int columnIndex1 = cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_2);
                 List_Content = cursor.getString(columnIndex1);
             }
+//            int columnIndex_ID = cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_0);//获取_ID所在的列下标
+//            String values_ID = cursor.getString(columnIndex_ID);
+//            int rous = cursor.getCount();
         }
         if (cursor != null) cursor.close();//查询完关闭游标
         return List_Content;
@@ -145,8 +154,8 @@ public class DB_ModifyPlayList {
             int name = cursor.getColumnIndex(DB_Info.TABLE_KEY_1);
             String getName = cursor.getString(name);
             if (getName.equals(myname)) {
-                int id= cursor.getInt(cursor.getColumnIndex(DB_Info.TABLE_KEY_0));
-                Log.v("gpp", "song在表中的位置:"+id);
+                int id = cursor.getInt(cursor.getColumnIndex(DB_Info.TABLE_KEY_0));
+                Log.v("gpp", "song在表中的位置:" + id);
                 if (cursor != null) cursor.close();//查询完关闭游标
                 return id;
             }
