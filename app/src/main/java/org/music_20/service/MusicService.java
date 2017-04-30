@@ -127,47 +127,74 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public void next() {
-        temp = positon;
-        Log.v("gpp", "上一曲:" + temp + " 结束");
-        if (temp == list.size() - 1 || positon > list.size() - 1) {
-            positon = -1;
-            temp = 0;
-        }
         try {
-            if (temp < list.size() - 1) {
-                positon++;
-                temp = positon;
-                Log.v("gpp", "下一曲:" + temp + " 开始播放");
-                player.reset();
-                player.setDataSource(list.get(temp).getPath());
-                player.prepare();
-                player.start();
-            }
+            if (positon > list.size() - 1) positon = 0;
+            positon++;
+            temp = positon;
+            if (temp > list.size() - 1) temp = 0;
+            Log.v("gpp", "temp:" + temp);
+            String path = list.get(temp).getPath();
+            player.reset();
+            player.setDataSource(path);
+            player.prepare();
+            player.start();
+
         } catch (IOException e) {
-            Log.v("gpp", "song.getPath获取为空");
         }
+
+//        temp = positon;
+//        Log.v("gpp", "上一曲:" + temp + " 结束");
+//        if (temp == list.size() - 1 || positon > list.size() - 1) {
+//            positon = -1;
+//            temp = 0;
+//        }
+//        try {
+//            if (temp < list.size() - 1) {
+//                positon++;
+//                temp = positon;
+//                Log.v("gpp", "下一曲:" + temp + " 开始播放");
+//                player.reset();
+//                player.setDataSource(list.get(temp).getPath());
+//                player.prepare();
+//                player.start();
+//            }
+//        } catch (IOException e) {
+//            Log.v("gpp", "song.getPath获取为空");
+//        }
     }
 
     public void pre() {
-        temp = positon;
-        Log.v("gpp", "上一曲:" + temp + " 结束");
         try {
-            if (temp < list.size()) {
-                positon--;
-                if (positon == -1) {
-                    positon = list.size() - 1;
-                    temp = list.size() - 1;
-                } else {
-                    temp = positon;
-                }
-                Log.v("gpp", "下一曲:" + temp + " 开始播放");
-                player.reset();
-                player.setDataSource(list.get(temp).getPath());
-                player.prepare();
-                player.start();
-            }
+            if (positon == 0) positon = list.size();
+            positon--;
+            temp = positon;
+            Log.v("gpp", "temp:" + temp);
+            String path = list.get(temp).getPath();
+            player.reset();
+            player.setDataSource(path);
+            player.prepare();
+            player.start();
         } catch (IOException e) {
-            Log.v("gpp", "song.getPath获取为空");
         }
+//        temp = positon;
+//        Log.v("gpp", "上一曲:" + temp + " 结束");
+//        try {
+//            if (temp < list.size()) {
+//                positon--;
+//                if (positon == -1) {
+//                    positon = list.size() - 1;
+//                    temp = list.size() - 1;
+//                } else {
+//                    temp = positon;
+//                }
+//                Log.v("gpp", "下一曲:" + temp + " 开始播放");
+//                player.reset();
+//                player.setDataSource(list.get(temp).getPath());
+//                player.prepare();
+//                player.start();
+//            }
+//        } catch (IOException e) {
+//            Log.v("gpp", "song.getPath获取为空");
+//        }
     }
 }
