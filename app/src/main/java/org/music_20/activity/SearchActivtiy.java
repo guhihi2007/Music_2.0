@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,17 +40,18 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
     private SearchAdapter adapter;
     private Handler handler;
     private String mp3 = ".mp3";
-    public static String  playlist_name;
+    public static String playlist_name;
     private Context context;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dire);
+        this.context = this;
         intent = getIntent();
         findView();
         setListener();
         serachData();
-        this.context=this;
     }
 
     private void serachData() {
@@ -73,7 +75,6 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
                             break;
                         case done:
                             dialog.dismiss();
-//                            Log.v("gpp", "对话框dismiss");
                             break;
                     }
                 }
@@ -102,7 +103,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
 
     @Override
     public void setListener() {
-        playlist_name=intent.getStringExtra("title_name");
+        playlist_name = intent.getStringExtra("title_name");
         action_tv.setText(intent.getStringExtra("dirname"));
         serach_btn.setVisibility(View.INVISIBLE);
         serach_btn.setOnClickListener(new View.OnClickListener() {
@@ -110,16 +111,15 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
             public void onClick(View v) {
                 ArrayList<Song> chosesonglist = new ArrayList<>();
                 //遍历map，存入ArrayList
-                Map map = adapter.getChoseMap();
+//                Map map = adapter.getChoseMap();
+                ArrayMap map=adapter.getArrayMap();
                 for (Object music : map.values()) {
                     Song song = (Song) music;
                     chosesonglist.add(song);
-                    DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(SearchActivtiy.this,playlist_name);
+                    Log.v("gpp", "Map取出："+song.getName());
+                    DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(SearchActivtiy.this, playlist_name);
                     dbModifyPlayList.add_songToList(song);
                 }
-                /**
-                 * 未存入数据库，未完待续
-                 */
                 Intent back = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("song", chosesonglist);
@@ -142,19 +142,19 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
     @Override
     public void OnCommonClickListener(View v, int position) {
         String type = list.get(position).getType();
-        String dirpath = list.get(position).getPath();
-        String dirname = list.get(position).getName();
         if (mp3.equals(type)) {
-            adapter.setSelected(position);//点击选中或不选中
+        adapter.setSelected(position);//点击选中或不选中
             return;
         }
+
+        String dirpath = list.get(position).getPath();
+        String dirname = list.get(position).getName();
         Intent intent = new Intent();
         intent.setClass(this, SearchActivtiy.class);
         intent.putExtra("dirpath", dirpath);
         intent.putExtra("dirname", dirname);
-        intent.putExtra("title_name",playlist_name);
+        intent.putExtra("title_name", playlist_name);
         Log.v("gpp", "进入文件夹:" + dirname);
-//        Log.v("gpp", "发送播放列表来源:" + playlist_name);
         startActivity(intent);
     }
 
@@ -164,7 +164,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
             serach_btn.setImageResource(R.mipmap.ok);
             serach_btn.setVisibility(View.VISIBLE);
             adapter.setShowbox();//长按设置显示checkbox
-//        adapter.setSelected(position);//当前长按item被选中
+            adapter.setSelected(position);//当前长按item被选中
             adapter.notifyDataSetChanged();
         }
         return true;

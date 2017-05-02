@@ -31,6 +31,7 @@ public class CommonViewHolder extends RecyclerView.ViewHolder implements View.On
         //给itemview添加监听
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
+
     }
 
     public void setCommonClickListener(CommonClickListener commonClickListener) {
@@ -71,6 +72,12 @@ public class CommonViewHolder extends RecyclerView.ViewHolder implements View.On
         CheckBox cb = (CheckBox) getView(id);
         if (cb != null)
             cb.setVisibility(isVisiable);
+        return this;
+    }
+    public CommonViewHolder setChecked(int id, boolean isChecked) {
+        CheckBox cb = (CheckBox) getView(id);
+        if (cb != null)
+            cb.setChecked(isChecked);
         return this;
     }
 

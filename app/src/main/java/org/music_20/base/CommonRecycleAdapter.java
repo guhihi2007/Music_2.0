@@ -7,7 +7,9 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
+import org.music_20.R;
 import org.music_20.activity.Data;
 import org.music_20.activity.Song;
 
@@ -27,6 +29,7 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     protected SparseArray<Boolean> boxarray = new SparseArray<>();
     protected boolean hasCheckbox;
     protected View footView;
+
     public CommonRecycleAdapter(Context context) {
         this.layoutInflater = LayoutInflater.from(context);
     }
@@ -37,6 +40,7 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
         this.datas = datas;
         this.LayoutID = layoutID;
     }
+
     public CommonRecycleAdapter(Context context, List<T> datas) {
         this.layoutInflater = LayoutInflater.from(context);
         this.datas = datas;
@@ -65,11 +69,13 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
         initNOselected();//设置box初始状态
         this.notifyDataSetChanged();
     }
+
     public void setSong(List<Song> datas) {
         this.datas = (List<T>) datas;
         initNOselected();//设置box初始状态
         this.notifyDataSetChanged();
     }
+
     public void addData(List<T> datas) {
 //        this.datas.clear();
         this.datas = datas;
@@ -80,7 +86,7 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     //设置数据，调用抽象方法bindData，继承这个类实现bindData方法
     @Override
     public void onBindViewHolder(CommonViewHolder holder, int position) {
-        bindData(holder, datas.get(position),position);
+        bindData(holder, datas.get(position), position);
     }
 
     @Override
@@ -89,13 +95,18 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     }
 
     //抽象方法
-    protected abstract void bindData(CommonViewHolder holder, T data,int position);
+    protected abstract void bindData(CommonViewHolder holder, T data, int position);
 
 
     private void initNOselected() {
-        if (datas!=null)
-            for (int i=0;i<datas.size();i++) {
-                boxarray.put(i,false);
+        if (datas != null)
+            for (int i = 0; i < datas.size(); i++) {
+                boxarray.put(i, false);
             }
     }
+
+    public SparseArray<Boolean> getBoxarray() {
+        return boxarray;
+    }
+
 }
