@@ -28,12 +28,12 @@ import java.util.Map;
  * Created by Administrator on 2017/4/18.
  */
 
-public class SearchActivtiy extends Activity implements InitView, CommonClickListener {
+public class SearchActivtiy extends Activity implements InitView, CommonClickListener, View.OnClickListener {
     public static final int SearchMusicCode = 2;
     private RecyclerView recyclerView;
     public ArrayList<Data> list;
     private ImageView serach_btn, action_back;
-    private TextView action_tv;
+    private TextView action_tv, action_cancel, action_all;
     private Intent intent;
     private ScanFile.CheckFileCallBack callback;
     private CheckDialog dialog;
@@ -91,6 +91,8 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
     @Override
     public void findView() {
         action_tv = (TextView) findViewById(R.id.action_tv);
+        action_cancel = (TextView) findViewById(R.id.action_cancel);
+        action_all = (TextView) findViewById(R.id.action_all);
         action_back = (ImageView) findViewById(R.id.back_btn);
         serach_btn = (ImageView) findViewById(R.id.search_btn);
         recyclerView = (RecyclerView) findViewById(R.id.dire_reclv);
@@ -105,48 +107,20 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
     public void setListener() {
         playlist_name = intent.getStringExtra("title_name");
         action_tv.setText(intent.getStringExtra("dirname"));
+        action_cancel.setOnClickListener(this);
+        action_all.setOnClickListener(this);
         serach_btn.setVisibility(View.INVISIBLE);
-        serach_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<Song> chosesonglist = new ArrayList<>();
-                //遍历map，存入ArrayList
-//                Map map = adapter.getChoseMap();
-                ArrayMap map=adapter.getArrayMap();
-                for (Object music : map.values()) {
-                    Song song = (Song) music;
-                    chosesonglist.add(song);
-                    Log.v("gpp", "Map取出："+song.getName());
-                    DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(SearchActivtiy.this, playlist_name);
-                    dbModifyPlayList.add_songToList(song);
-                }
-                Intent back = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("song", chosesonglist);
-                back.putExtras(bundle);
-                back.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//设置activity启动模式，这里用的模式是回到已经启动过的activity界面，并清除他上面所有的activity
-                back.putExtra("title_name", playlist_name);
-                back.setClass(SearchActivtiy.this, SongListActivtiy.class);
-                startActivity(back);
-//                Log.v("gpp", "返回播放列表："+playlist_name);
-            }
-        });
-        action_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        serach_btn.setOnClickListener(this);
+        action_back.setOnClickListener(this);
     }
 
     @Override
     public void OnCommonClickListener(View v, int position) {
         String type = list.get(position).getType();
         if (mp3.equals(type)) {
-        adapter.setSelected(position);//点击选中或不选中
+            adapter.setSelected(position);//点击选中或不选中
             return;
         }
-
         String dirpath = list.get(position).getPath();
         String dirname = list.get(position).getName();
         Intent intent = new Intent();
@@ -163,6 +137,10 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
         if (adapter.getHaxbox()) {
             serach_btn.setImageResource(R.mipmap.ok);
             serach_btn.setVisibility(View.VISIBLE);
+            action_all.setVisibility(View.VISIBLE);
+            action_all.setText("全选");
+            action_cancel.setVisibility(View.VISIBLE);
+            action_cancel.setText("取消");
             adapter.setShowbox();//长按设置显示checkbox
             adapter.setSelected(position);//当前长按item被选中
             adapter.notifyDataSetChanged();
@@ -170,4 +148,45 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.search_btn:
+                ArrayList<Song> chosesonglist = new ArrayList<>();
+
+                ArrayMap map = adapter.getArrayMap();
+                if (map.size() > 0) {
+                    Log.v("gpp", "map：" + map.size());
+                    //遍历map，存入ArrayList
+                    for (Object music : map.values()) {
+                        Song song = (Song) music;
+                        chosesonglist.add(song);
+//                        Log.v("gpp", "Map取出：" + song.getName());
+                        DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(SearchActivtiy.this, playlist_name);
+                        dbModifyPlayList.add_songToList(song);
+                    }
+                    Intent back = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("song", chosesonglist);
+                    back.putExtras(bundle);
+                    back.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//设置activity启动模式，这里用的模式是回到已经启动过的activity界面，并清除他上面所有的activity
+                    back.putExtra("title_name", playlist_name);
+                    back.setClass(SearchActivtiy.this, SongListActivtiy.class);
+                    startActivity(back);
+                } else {
+                    Log.v("gpp", "map：" + map.size());
+                    finish();
+                }
+                break;
+            case R.id.back_btn:
+                finish();
+                break;
+            case R.id.action_cancel:
+                adapter.setBoxarray(false);
+                break;
+            case R.id.action_all:
+                adapter.setBoxarray(true);
+                break;
+        }
+    }
 }

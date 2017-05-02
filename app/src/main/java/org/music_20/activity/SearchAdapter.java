@@ -26,14 +26,12 @@ public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiIt
 
     private CommonClickListener commonClickListener;
     private boolean showbox = false;//是否显示checkbox
-    private Map<Integer, Song> ChoseList;
     private ArrayMap<Integer, Song> arrayMap;
 
     public SearchAdapter(Context context, CommonClickListener commonClickListener) {
         super(context);
         this.commonClickListener = commonClickListener;
         this.multiItemViewType = this;
-        ChoseList = new HashMap<>();
         arrayMap = new ArrayMap<>();
     }
 
@@ -63,11 +61,9 @@ public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiIt
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
                             Log.v("gpp", "勾选：" + datas.get(position).getName());
-//                            ChoseList.put(position, (Song) datas.get(position));
                             arrayMap.put(position, (Song) datas.get(position));
                         } else {
                             Log.v("gpp", "删除：" + datas.get(position).getName());
-//                            ChoseList.remove(position);
                             arrayMap.remove(position);
                         }
                         //状态存入SparseArray记录
@@ -79,7 +75,7 @@ public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiIt
             } else {
                 holder.setVisibility(R.id.vh_cb, View.INVISIBLE);
             }
-            holder.setChecked(R.id.vh_cb,getBoxarray().get(position));//没有这句会导致，重用viewholder的时候checkbox未勾选
+            holder.setChecked(R.id.vh_cb, getBoxarray().get(position));//没有这句会导致，重用viewholder的时候checkbox未勾选
         }
 
         holder.setCommonClickListener(commonClickListener);
@@ -99,16 +95,30 @@ public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiIt
         notifyItemChanged(position);//通知状态改变
     }
 
-    public Map<Integer, Song> getChoseMap() {
-        return ChoseList;
-    }
-
     public ArrayMap<Integer, Song> getArrayMap() {
         return arrayMap;
     }
 
     public SparseArray<Boolean> getBoxarray() {
         return boxarray;
+    }
+
+    public void setBoxarray(boolean isallSelected) {
+        if (isallSelected) {
+            for (int i = 0; i < datas.size(); i++) {
+                boxarray.put(i, true);
+                arrayMap.put(i, (Song) datas.get(i));
+                this.notifyDataSetChanged();
+                //                notifyItemChanged(i);
+            }
+        } else {
+            for (int i = 0; i < datas.size(); i++) {
+                boxarray.put(i, false);
+                arrayMap.clear();
+                this.notifyDataSetChanged();
+                //                notifyItemChanged(i);
+            }
+        }
     }
 
     public boolean getHaxbox() {
