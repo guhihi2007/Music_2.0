@@ -153,7 +153,6 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
         switch (v.getId()) {
             case R.id.search_btn:
                 ArrayList<Song> chosesonglist = new ArrayList<>();
-
                 ArrayMap map = adapter.getArrayMap();
                 if (map.size() > 0) {
                     Log.v("gpp", "map：" + map.size());

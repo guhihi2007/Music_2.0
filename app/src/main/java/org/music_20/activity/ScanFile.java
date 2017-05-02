@@ -58,7 +58,8 @@ public class ScanFile {
                 if (files[i].isDirectory() && !files[i].isHidden()) {
                     String filename = files[i].getName();
                     String filepath = files[i].getAbsolutePath();
-                    int count = scan(filepath).size();
+//                    int count = scan(filepath).size();
+                    int count =0;
                     String type = "dir";
                     data = new Folder(filename, filepath,count);
                     list.add(data);

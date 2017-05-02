@@ -40,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/vh_tv"
                 android:layout_gravity="center"
-                android:text="2项"
                 android:textSize="10sp" />
 
         </RelativeLayout>

@@ -29,21 +29,25 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     protected SparseArray<Boolean> boxarray = new SparseArray<>();
     protected boolean hasCheckbox;
     protected View footView;
-
+    protected Context context;
     public CommonRecycleAdapter(Context context) {
         this.layoutInflater = LayoutInflater.from(context);
+        this.context=context;
     }
 
     //构造方法中传入datas,layoutID,layoutID就是viewholder的布局文件id
     public CommonRecycleAdapter(Context context, List<T> datas, int layoutID) {
         this.layoutInflater = LayoutInflater.from(context);
         this.datas = datas;
+        this.context=context;
+
         this.LayoutID = layoutID;
     }
 
     public CommonRecycleAdapter(Context context, List<T> datas) {
         this.layoutInflater = LayoutInflater.from(context);
         this.datas = datas;
+        this.context=context;
     }
 
     @Override

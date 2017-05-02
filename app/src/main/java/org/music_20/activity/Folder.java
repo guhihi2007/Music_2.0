@@ -9,6 +9,7 @@ public class Folder extends Data<Folder> {
     public Folder(String name){
         super(name);
     }
+
     public Folder(String name, String path,int count) {
         super(name, path,".dir");
         this.count = count;

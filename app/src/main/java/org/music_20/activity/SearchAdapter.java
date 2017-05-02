@@ -50,7 +50,7 @@ public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiIt
             holder.setText(R.id.vh_tv2, data.getSize());
         } else {
             holder.setText(R.id.vh_tv, data.getName());//文件夹格式是的显示
-            holder.setText(R.id.vh_tv2, data.getCount() + "项");
+//            holder.setText(R.id.vh_tv2, data.getCount() + "项");
         }
         if (showbox) {
             if ((holder.getView(R.id.vh_cb)) != null) {

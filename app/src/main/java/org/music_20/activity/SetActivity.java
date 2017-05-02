@@ -8,9 +8,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
@@ -24,10 +28,10 @@ import java.util.ArrayList;
  * Created by Administrator on 2017/4/25.
  */
 
-public class SetActivity extends Activity implements InitView, View.OnClickListener ,CommonClickListener{
+public class SetActivity extends Activity implements InitView, View.OnClickListener, CommonClickListener {
 
     public static final int RequestCode = 1;
-    private ImageView set_delete, search_btn,back_btn;
+    private ImageView set_delete, search_btn, back_btn;
     private RecyclerView recyclerView;
     public static String title_name = null;
     private ArrayList<Folder> dblist;
@@ -70,10 +74,11 @@ public class SetActivity extends Activity implements InitView, View.OnClickListe
         action_tv.setText(title_name);
         search_btn.setImageResource(R.mipmap.ok);
         back_btn.setOnClickListener(this);
-        DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this,null);
+        DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this, null);
         dblist = dbModifyPlayList.getPlayList();//从数据库取播放列表数据
-        adapter = new SetAdapter(this,this);
+        adapter = new SetAdapter(this, this);
         adapter.setDatas(dblist);
+        Log.v("gpp", "SetActivityList大小:" + dblist.size());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);

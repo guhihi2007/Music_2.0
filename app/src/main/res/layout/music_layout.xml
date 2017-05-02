@@ -31,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="凉凉"
-                android:textSize="16sp" />
+                android:text=""
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/vh_tv2"
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/vh_tv"
                 android:layout_gravity="center"
-                android:text="2项"
+                android:text=""
                 android:textSize="10sp" />
 
         </RelativeLayout>

@@ -148,15 +148,15 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
                 break;
             case R.id.list:
                 Log.v("gpp", "点击list_btn");
-                DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this, null);
-                dblist = dbModifyPlayList.getPlayList();//从数据库取播放列表数据
-                Log.v("gpp", "读取DB播放列表:" + (dblist == null ? null : dblist.size()));
+//                DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(this, null);
+//                dblist = dbModifyPlayList.getPlayList();//从数据库取播放列表数据
+//                Log.v("gpp", "读取DB播放列表:" + (dblist == null ? null : dblist.size()));
                 Intent intent = new Intent();
                 intent.setClass(this, ListActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("dblist", dblist);//用bundle存储传递到下一个activity
-                intent.putExtras(bundle);
-                intent.putExtra("title_name", "播放列表");
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("dblist", dblist);//用bundle存储传递到下一个activity
+//                intent.putExtras(bundle);
+//                intent.putExtra("title_name", "播放列表");
                 startActivity(intent);
                 break;
         }

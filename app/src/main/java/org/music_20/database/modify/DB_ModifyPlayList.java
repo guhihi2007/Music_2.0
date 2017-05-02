@@ -163,4 +163,24 @@ public class DB_ModifyPlayList {
         if (cursor != null) cursor.close();//查询完关闭游标
         return 0;
     }
+
+    public void deleteTable() {
+        String list_content = "";
+        Cursor cursor = database.query(mTableName, null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_1));
+            list_content = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_2));
+            if (list_name.equals(name)) {
+                Log.v("gpp", "数据库删除name:" + name);
+                Log.v("gpp", "数据库删除list_content:" + list_content);
+                String row = "DELETE FROM " + DB_Info.TABLE_NAME + " WHERE " + DB_Info.TABLE_PALY_LIST_KEY_1 + " = '" + list_name + "'";
+                String table = "DROP TABLE " + list_content + "";
+                database.execSQL(table);
+                database.execSQL(row);
+//                database.delete(DB_Info.TABLE_NAME, "" + DB_Info.TABLE_PALY_LIST_KEY_1 + " = ?", new String[]{list_name});
+            }
+        }
+        if (cursor != null) cursor.close();
+        database.close();
+    }
 }
