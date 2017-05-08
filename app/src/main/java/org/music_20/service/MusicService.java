@@ -1,23 +1,25 @@
 package org.music_20.service;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.music_20.activity.Song;
+import org.music_20.database.modify.DB_ModifyPlayList;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.provider.Settings.System.ALARM_ALERT;
 
@@ -28,11 +30,13 @@ import static android.provider.Settings.System.ALARM_ALERT;
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener, ReceiverCallBack {
     private MediaPlayer player;
     private ArrayList<Song> list;
-    private Song song;
     private int positon, temp = 0;
     private boolean isListrecycle = true, isRandom = false;
     private MyBroadcastReceiver receiver;
     private pauseCallBack pauseCallBack;
+    private int songDuration, currentPosition;
+    private Timer timer = new Timer();
+    private PlayMesssageCallBack playMesssageCallBack;
 
     @Override
     public void onCreate() {
@@ -40,25 +44,22 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         player = new MediaPlayer();
         player.setOnCompletionListener(this);
         receiver = new MyBroadcastReceiver();
-        Log.v("gpp", "MusicService启动");
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.intent.action.PHONE_STATE");
-        filter.addAction(ALARM_ALERT);
-        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        registerReceiver(receiver, filter);
-        Log.v("gpp", "注册电话监听" + player);
-        receiver.setCallBack(this);
+//        Log.v("gpp", "MusicService启动");
+        IntentFilter phone = new IntentFilter();
+        phone.addAction("android.intent.action.PHONE_STATE");
+        phone.addAction(ALARM_ALERT);
+        phone.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        registerReceiver(receiver, phone);
+//        Log.v("gpp", "注册电话监听" + player);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v("gpp", "Service_onStartCommand激活");
+        Log.v("gpp", "Service激活");
         list = (ArrayList<Song>) intent.getSerializableExtra("play_list");
         positon = intent.getIntExtra("position", 0);
-        if (player != null) {
-            String path = list.get(positon).getPath();
-            startPlay(path);
-            Log.v("gpp", "list中第 " + positon + " 个播放");
+        if (player != null && list != null) {
+            startPlay(list.get(positon));
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -82,31 +83,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         Random r = new Random();
         int number = r.nextInt(list.size());
         String path = list.get(number).getPath();
-        startPlay(path);
+        startPlay(list.get(number));
         Log.v("gpp", "list中第 " + number + " 个Random播放");
     }
 
     public void recyclePlay() {
         next();
-//        int temp = 0;
-//        try {
-//            if (positon < (list.size() - 1)) {
-//                positon++;
-//                Log.v("gpp", "list中第 temp=" + positon + " 个即将播放");
-//                player.reset();
-//                player.setDataSource(list.get(positon).getPath());
-//            }
-//            if (positon == list.size() - 1) {
-//                Log.v("gpp", "list播放完成，即将播放第temp=" + positon + "个");
-//                player.reset();
-//                player.setDataSource(list.get(positon).getPath());
-//                positon = 0;
-//            }
-//            player.prepare();
-//            player.start();
-//        } catch (IOException e) {
-//            Log.v("gpp", "song.getPath获取为空");
-//        }
     }
 
     @Override
@@ -116,7 +98,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         unregisterReceiver(receiver);
         super.onDestroy();
     }
-
 
     @Nullable
     @Override
@@ -138,7 +119,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public void idle() {
-    //挂机后,拔耳机后都调用
+        //挂机后,拔耳机后都调用
     }
 
     public void setPauseCallBack(MusicService.pauseCallBack pauseCallBack) {
@@ -165,34 +146,54 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             player.pause();
     }
 
-    private void startPlay(String path) {
+    public void startPlay(Song song) {
         player.reset();
         try {
-            player.setDataSource(path);
+            player.setDataSource(song.getPath());
             player.prepare();
             player.start();
+            songDuration = player.getDuration();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (playMesssageCallBack != null && player.isPlaying()) {
+                    currentPosition = player.getCurrentPosition();
+                    playMesssageCallBack.currentPosition(currentPosition);
+                }
+            }
+        }, 0, 1000);
+//        playMesssageCallBack.songDuration(songDuration);
+        Intent send = new Intent();
+        send.putExtra("songDuration", songDuration);
+        send.putExtra("song_name", song.getName());
+        send.setAction("songDuration");
+        sendBroadcast(send);
     }
 
     public void next() {
-        if (positon > list.size() - 1) positon = 0;
-        positon++;
-        temp = positon;
-        if (temp > list.size() - 1) temp = 0;
-        Log.v("gpp", "temp:" + temp);
-        String path = list.get(temp).getPath();
-        startPlay(path);
+        if (list != null) {
+            if (positon > list.size() - 1) positon = 0;
+            positon++;
+            temp = positon;
+            if (temp > list.size() - 1) temp = 0;
+            Log.v("gpp", "temp:" + temp);
+            String path = list.get(temp).getPath();
+            startPlay(list.get(temp));
+        }
     }
 
     public void pre() {
-        if (positon == 0) positon = list.size();
-        positon--;
-        temp = positon;
-        Log.v("gpp", "temp:" + temp);
-        String path = list.get(temp).getPath();
-        startPlay(path);
+        if (list != null) {
+            if (positon == 0) positon = list.size();
+            positon--;
+            temp = positon;
+            Log.v("gpp", "temp:" + temp);
+            String path = list.get(temp).getPath();
+            startPlay(list.get(temp));
+        }
     }
 
 
@@ -221,25 +222,21 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public boolean isPlay() {
-        if (list != null)
+//        if (list != null)
             return player.isPlaying();
-        return false;
+//        return false;
     }
 
-//    class MyBroadcastReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            TelephonyManager manager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
-//            int status = manager.getCallState();
-//            switch (status) {
-//                case TelephonyManager.CALL_STATE_RINGING:
-//                    Log.v("gpp","来电了"+player);
-//                    player.pause();
-//                case TelephonyManager.CALL_STATE_IDLE:
-//                    Log.v("gpp","空闲了"+player);
-//                    player.start();
-//                    break;
-//            }
-//        }
-//    }
+    public void seekTo(int s) {
+        player.seekTo(s);
+    }
+
+    public interface PlayMesssageCallBack {
+        void currentPosition(int current);
+    }
+
+    public void setPlayMesssageCallBack(PlayMesssageCallBack playMesssageCallBack) {
+        this.playMesssageCallBack = playMesssageCallBack;
+    }
+
 }

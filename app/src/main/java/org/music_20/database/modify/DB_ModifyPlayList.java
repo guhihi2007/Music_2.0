@@ -23,12 +23,9 @@ public class DB_ModifyPlayList {
 
     private String mTableName;
     private SQLiteDatabase database;
-    private static int i = 0;
     private String LIST_CONTENT, list_name;
-    private Context context;
 
     public DB_ModifyPlayList(Context context, String list_name) {
-        this.context = context;
         this.list_name = list_name;
         DB_Interface db_interface = new DB_GetPlayListHelper();
         DataBaseHelper dataBaseHelper = db_interface.getDBhelper(context, DB_Info.TABLE_NAME);
@@ -37,29 +34,25 @@ public class DB_ModifyPlayList {
         if (list_name != null) {
             LIST_CONTENT = getListContent();
         }
+        String sql = "CREATE TABLE IF NOT EXISTS " + DB_Info.LAST_TABLE_NAME + " ( _ID INTEGER PRIMARY KEY," + DB_Info.TABLE_KEY_1 + " TEXT NOT NULL ," + DB_Info.TABLE_KEY_2 + " TEXT NOT NULL," + DB_Info.TABLE_KEY_3 + " TEXT NOT NULL," + DB_Info.TABLE_KEY_4 + " TEXT NOT NULL)";
+        database.execSQL(sql);
     }
 
     public void add_Table() {
-        String list_content = "content_" + getRows() + "";
+        String list_content = "content_" + getID() + "";
         ContentValues cv = new ContentValues();
         cv.put(DB_Info.TABLE_PALY_LIST_KEY_1, list_name);
         cv.put(DB_Info.TABLE_PALY_LIST_KEY_2, list_content);
         database.insert(mTableName, null, cv);
         add_ListContent(list_content);
-        Log.v("gpp", "新建playlist:" + list_name + ",listcontent:" + list_content);
-        i++;
+//        Log.v("gpp", "新建playlist:" + list_name + ",listcontent:" + list_content);
+        database.close();
     }
 
     private void add_ListContent(String list_content) {
         String sql = "CREATE TABLE IF NOT EXISTS " + list_content + " ( _ID INTEGER PRIMARY KEY," + DB_Info.TABLE_KEY_1 + " TEXT NOT NULL ," + DB_Info.TABLE_KEY_2 + " TEXT NOT NULL," + DB_Info.TABLE_KEY_3 + " TEXT NOT NULL," + DB_Info.TABLE_KEY_4 + " TEXT NOT NULL)";
         database.execSQL(sql);
         database.close();
-    }
-
-    private int getRows() {
-        Cursor cursor = database.query(mTableName, null, null, null, null, null, null);
-        int rows = cursor.getCount();
-        return rows;
     }
 
     public String getListContent() {
@@ -72,9 +65,6 @@ public class DB_ModifyPlayList {
                 int columnIndex1 = cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_2);
                 List_Content = cursor.getString(columnIndex1);
             }
-//            int columnIndex_ID = cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_0);//获取_ID所在的列下标
-//            String values_ID = cursor.getString(columnIndex_ID);
-//            int rous = cursor.getCount();
         }
         if (cursor != null) cursor.close();//查询完关闭游标
         return List_Content;
@@ -90,6 +80,7 @@ public class DB_ModifyPlayList {
             list.add(folder);
         }
         if (cursor != null) cursor.close();//查询完关闭游标
+        database.close();
         return list;
     }
 
@@ -103,7 +94,7 @@ public class DB_ModifyPlayList {
             int name = cursor.getColumnIndex(DB_Info.TABLE_KEY_1);
             String getName = cursor.getString(name);
             if (getName.equals(addname)) {
-                Log.v("gpp", "添加了已存在的song，不继续添加");
+//                Log.v("gpp", "添加了已存在的song，不继续添加");
                 return;
             }
         }
@@ -119,15 +110,15 @@ public class DB_ModifyPlayList {
         cv.put(DB_Info.TABLE_KEY_4, values_4);
 
         database.insert(LIST_CONTENT, null, cv);
-        Log.v("gpp", "添加歌曲到表:" + LIST_CONTENT);
-        Log.v("gpp", "添加歌曲到数据库:" + values_1 + "||" + values_2 + "||" + values_3 + "||" + values_4);
+//        Log.v("gpp", "添加歌曲到表:" + LIST_CONTENT);
+//        Log.v("gpp", "添加歌曲到数据库:" + values_1 + "||" + values_2 + "||" + values_3 + "||" + values_4);
         database.close();
     }
 
     public ArrayList getSongList() {
         ArrayList<Song> list = new ArrayList<>();
         Cursor cursor = database.query(LIST_CONTENT, null, null, null, null, null, null);
-        Log.v("gpp", "取出歌曲的表listcontent:" + LIST_CONTENT);
+//        Log.v("gpp", "取出歌曲的表listcontent:" + LIST_CONTENT);
         while (cursor.moveToNext()) {
             int name = cursor.getColumnIndex(DB_Info.TABLE_KEY_1);
             int path = cursor.getColumnIndex(DB_Info.TABLE_KEY_2);
@@ -137,50 +128,67 @@ public class DB_ModifyPlayList {
             String getName = cursor.getString(name);
             String getPath = cursor.getString(path);
             String getSize = cursor.getString(size);
-            String getTpye = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_KEY_3));
-            Log.v("gpp", "数据库取出歌曲:" + getName + "||" + getPath + "||" + getTpye + "||" + getSize);
             Song song = new Song(getName, getPath, getSize);
-//            Log.v("gpp", "添加歌曲到list:" + song.getName() + "||" + song.getPath() + "||" + song.getType()+ "||" + song.getSize());
             list.add(song);
         }
         if (cursor != null) cursor.close();//查询完关闭游标
+        database.close();
         return list;
     }
 
-    public int getID(Song song) {
-        String myname = song.getName();
-        Cursor cursor = database.query(LIST_CONTENT, null, null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            int name = cursor.getColumnIndex(DB_Info.TABLE_KEY_1);
-            String getName = cursor.getString(name);
-            if (getName.equals(myname)) {
-                int id = cursor.getInt(cursor.getColumnIndex(DB_Info.TABLE_KEY_0));
-                Log.v("gpp", "song在表中的位置:" + id);
-                if (cursor != null) cursor.close();//查询完关闭游标
-                return id;
-            }
+    public int getID() {//获取ID
+        Cursor cursor = database.query(mTableName, null, null, null, null, null, null);
+        while (cursor.moveToLast()) {
+            int id = cursor.getInt(0);
+            if (cursor != null) cursor.close();//查询完关闭游标
+            return id + 1;
         }
         if (cursor != null) cursor.close();//查询完关闭游标
-        return 0;
+        return 1;
     }
 
     public void deleteTable() {
-        String list_content = "";
         Cursor cursor = database.query(mTableName, null, null, null, null, null, null);
         while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_1));
-            list_content = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_2));
+            String list_content = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_PALY_LIST_KEY_2));
             if (list_name.equals(name)) {
-                Log.v("gpp", "数据库删除name:" + name);
-                Log.v("gpp", "数据库删除list_content:" + list_content);
+//                Log.v("gpp", "数据库删除name:" + name);
+//                Log.v("gpp", "数据库删除list_content:" + list_content);
                 String row = "DELETE FROM " + DB_Info.TABLE_NAME + " WHERE " + DB_Info.TABLE_PALY_LIST_KEY_1 + " = '" + list_name + "'";
                 String table = "DROP TABLE " + list_content + "";
                 database.execSQL(table);
                 database.execSQL(row);
-//                database.delete(DB_Info.TABLE_NAME, "" + DB_Info.TABLE_PALY_LIST_KEY_1 + " = ?", new String[]{list_name});
             }
         }
         if (cursor != null) cursor.close();
         database.close();
+    }
+
+    public void saveLast(ArrayList<Song> songlist) {
+        String delete = "DELETE FROM " + DB_Info.LAST_TABLE_NAME + "";
+        database.execSQL(delete);
+        ContentValues cv = new ContentValues();
+        for (int i = 0; i < songlist.size(); i++) {
+            cv.put(DB_Info.TABLE_KEY_1, songlist.get(i).getName());
+            cv.put(DB_Info.TABLE_KEY_2, songlist.get(i).getPath());
+            cv.put(DB_Info.TABLE_KEY_3, songlist.get(i).getType());
+            cv.put(DB_Info.TABLE_KEY_4, songlist.get(i).getSize());
+            database.insert(DB_Info.LAST_TABLE_NAME, null, cv);
+        }
+        database.close();
+    }
+
+    public ArrayList<Song> getLast() {
+        Cursor cursor = database.query(DB_Info.LAST_TABLE_NAME, null, null, null, null, null, null);
+        ArrayList<Song> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_KEY_1));
+            String path = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_KEY_2));
+            String size = cursor.getString(cursor.getColumnIndex(DB_Info.TABLE_KEY_4));
+            Song song = new Song(name, path, size);
+            list.add(song);
+        }
+        return list;
     }
 }

@@ -109,7 +109,7 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
         Intent intent = new Intent();
         intent.setClass(this, SongListActivtiy.class);
         intent.putExtra("title_name", dirname);
-        Log.v("gpp", "进入播放列表:" + dirname);
+        Log.v("gpp", "进入列表:" + dirname);
         startActivity(intent);
     }
 

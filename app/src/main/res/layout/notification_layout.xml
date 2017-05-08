@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_gravity="center">
+
+    <ImageView
+        android:id="@+id/notify_icon"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/music_icon" />
+
+    <ImageView
+        android:id="@+id/notify_next"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:padding="13dp"
+        android:src="@mipmap/next" />
+
+    <ImageView
+        android:id="@+id/notify_play"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/notify_next"
+        android:padding="20dp"
+        android:src="@mipmap/play" />
+
+    <TextView
+        android:id="@+id/notify_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/notify_play"
+        android:layout_toRightOf="@id/notify_icon"
+        android:gravity="center"
+        android:text="凉凉"
+        android:textSize="30sp" />
+    <!--<org.music_20.activity.MarqueeTextView-->
+        <!--android:id="@+id/notify_tv"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:ellipsize="marquee"-->
+        <!--android:marqueeRepeatLimit="1"-->
+        <!--android:maxLines="1"-->
+        <!--android:layout_toLeftOf="@id/notify_play"-->
+        <!--android:layout_toRightOf="@id/notify_icon"-->
+        <!--android:gravity="center"-->
+        <!--android:text="凉凉"-->
+        <!--android:textSize="30sp" />-->
+
+</RelativeLayout>

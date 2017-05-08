@@ -24,4 +24,11 @@ public class DB_Info {
     public static final String TABLE_KEY_3="song_type";//每个播放列表，歌曲大小键
     public static final String TABLE_KEY_4="song_size";//每个播放列表，歌曲大小键
 
+    /**
+     * 表三:最后一次播放列表
+     */
+    public static final String LAST_TABLE_NAME="LAST_PLAY_SONG";
+    public static final String TABLE_LAST_KEY_0="ID";
+    public static final String TABLE_LAST_KEY_1="LAST_PLAY_LIST";
+
 }

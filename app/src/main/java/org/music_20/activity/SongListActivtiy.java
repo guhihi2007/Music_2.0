@@ -84,8 +84,17 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
          */
 //        String name = list.get(position).getName();
 //        Song song = list.get(position);
-
 //        Log.v("gpp", "点击音乐:" + name);
+
+        Intent activity = new Intent();
+        activity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.setClass(this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("play_list", list);
+        activity.putExtra("title_name",title_name);
+        activity.putExtra("position",position);
+        activity.putExtras(bundle);
+        startActivity(activity);
 
         Intent serviceIntent = new Intent();
         serviceIntent.setClass(this, MusicService.class);
@@ -94,14 +103,6 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
         serviceIntent.putExtras(serviceBundle);
         serviceIntent.putExtra("position",position);
         startService(serviceIntent);
-
-        Intent activity = new Intent();
-        activity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        activity.setClass(this, MainActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("play_list", list);
-        activity.putExtras(bundle);
-        startActivity(activity);
 
     }
 
