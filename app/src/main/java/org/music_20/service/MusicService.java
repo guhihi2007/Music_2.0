@@ -8,10 +8,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.service.notification.NotificationListenerService;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -63,14 +60,19 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Gpp.v("Service激活");
         list = (ArrayList<Song>) intent.getSerializableExtra("play_list");
-        int play = intent.getIntExtra("notify_play", 0);
-        Gpp.v("notify_play:" + play);
-        positon = intent.getIntExtra("position", 0);
-        if (player != null && list != null) {
-            startPlay(list.get(positon));
+        String number = intent.getStringExtra("position");
+        if (number == null) {
+            DB_ModifyPlayList dmp = new DB_ModifyPlayList(this, null);
+            list = dmp.getLast();
+            Gpp.v("启动Music");
+        } else {
+            Gpp.v("歌曲列表启动Music");
+            positon = Integer.parseInt(number);
+            if (player != null)
+                startPlay(list.get(positon));
         }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -92,7 +94,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     private void randomPlay() {
         Random r = new Random();
         int number = r.nextInt(list.size());
-        String path = list.get(number).getPath();
         startPlay(list.get(number));
         Gpp.v("list中第 " + number + " 个Random播放");
     }
@@ -106,6 +107,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         player.release();
         player = null;
         unregisterReceiver(receiver);
+        notification.cancel();
+        Gpp.v("MusicService销毁");
         super.onDestroy();
     }
 
@@ -118,9 +121,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void setPauseCallBack(MusicService.pauseCallBack pauseCallBack) {
         this.pauseCallBack = pauseCallBack;
     }
+
     //更新UI回调接口
     public interface pauseCallBack {
         void paused();
+
+        void started();
     }
 
     public class CoreServiceBinder extends Binder {
@@ -129,14 +135,16 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         }
     }
 
-
     public void play() {
         player.start();
+        notification.notifyPause();
     }
 
     public void pause() {
-        if (player.isPlaying())
+        if (player.isPlaying()) {
             player.pause();
+            notification.notifyPlay();
+        }
     }
 
     public void startPlay(Song song) {
@@ -149,6 +157,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //timeer每秒获取当前播放进度，回调传给UI线程处理
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -158,12 +167,15 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 }
             }
         }, 0, 1000);
+        //广播发送歌曲时长，和歌曲名
         Intent send = new Intent();
         send.putExtra("songDuration", songDuration);
         send.putExtra("song_name", song.getName());
         send.setAction("songDuration");
         sendBroadcast(send);
+        //启动通知栏
         notification.sendNotification(song);
+        notification.notifyPause();
     }
 
     public void next() {
@@ -218,6 +230,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void seekTo(int s) {
         player.seekTo(s);
     }
+
     //播放进度回调，回传更新UI播放时间
     public interface PlayMesssageCallBack {
         void currentPosition(int current);
@@ -226,7 +239,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void setPlayMesssageCallBack(PlayMesssageCallBack playMesssageCallBack) {
         this.playMesssageCallBack = playMesssageCallBack;
     }
-   //广播，监听来电，拔耳机，通知栏暂停，下一曲
+
+    //广播，监听来电，拔耳机，通知栏暂停，下一曲
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -237,17 +251,18 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 pauseCallBack.paused();//更新UI回调
             } else if (action.equals("play")) {
                 if (player.isPlaying()) {
-                    player.pause();
+                    pause();
+                    pauseCallBack.paused();//更新UI回调
                     Gpp.v("广播pause");
                 } else {
-                    player.start();
-                   Gpp.v("广播start");
+                    play();
+                    pauseCallBack.started();//更新UI回调
+                    Gpp.v("广播start");
                 }
             } else if (action.equals("next")) {
-                if (player.isPlaying()) {
-                    next();
-                 Gpp.v("广播next");
-                }
+                next();
+                pauseCallBack.started();//更新UI回调
+                Gpp.v("广播next");
             }
             TelephonyManager manager = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
             int status = manager.getCallState();
@@ -255,6 +270,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 case TelephonyManager.CALL_STATE_RINGING://来电时调用
                     Gpp.v("onReceive来电了");
                     pause();
+                    notification.notifyPlay();
                     pauseCallBack.paused();//更新UI回调
             }
         }

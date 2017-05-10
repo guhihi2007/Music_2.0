@@ -16,6 +16,6 @@ public class Test extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_layout);
-        TextView textView =(TextView)findViewById(R.id.notify_tv);
+//        TextView textView =(TextView)findViewById(R.id.notify_tv);
     }
 }

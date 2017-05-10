@@ -18,10 +18,10 @@
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,7 +32,7 @@
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".activity.SongListActivtiy" />
         <activity android:name=".activity.SetActivity" />
-        <activity android:name=".activity.Test" />
+        <activity android:name=".activity.Test"/>
         <service android:name=".service.MusicService" />
     </application>
 

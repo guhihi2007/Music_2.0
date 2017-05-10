@@ -30,15 +30,11 @@
 
     <!--<org.music_20.activity.MyTextView-->
     <!--android:id="@+id/notify_tv"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="match_parent"-->
+    <!--style="@style/Marquee_tv"-->
     <!--android:layout_toLeftOf="@id/notify_play"-->
     <!--android:layout_toRightOf="@id/notify_icon"-->
-    <!--android:ellipsize="marquee"-->
     <!--android:gravity="center"-->
-    <!--android:singleLine="true"-->
-    <!--android:marqueeRepeatLimit="marquee_forever"-->
-    <!--android:text="凉凉在此刻进空间发那附近"-->
+    <!--android:text="跑马灯效果TextView"-->
     <!--android:textSize="20sp" />-->
 
     <TextView
@@ -52,8 +48,9 @@
         android:focusableInTouchMode="true"
         android:gravity="center"
         android:marqueeRepeatLimit="marquee_forever"
+        android:paddingLeft="10dp"
         android:singleLine="true"
-        android:text="凉凉在此刻进空间发那附近"
-        android:textSize="20sp" />
+        android:text="Music_2.0"
+        android:textSize="18sp" />
 
 </RelativeLayout>

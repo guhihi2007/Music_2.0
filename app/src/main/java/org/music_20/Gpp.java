@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class Gpp {
     public static final String TAG = "gpp";
-    private static boolean isShow=false;
+    private static boolean isShow=true;
 
     public static void v(String msg) {
         if (isShow) {

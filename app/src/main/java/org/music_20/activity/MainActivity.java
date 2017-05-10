@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         songReceiver = new songReceiver();
         registerReceive();
         findView();
-        startCoreService();
+//        startCoreService();
         setListener();
         bindCoreService();
     }
@@ -120,7 +120,13 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         } else {
             if (last_song != null) {
                 adapter.setDatas(last_song);
-                Gpp.v("最后一次播放List:" + last_song.size());
+                Gpp.v("final_time:" + last_song.size());
+                Intent serviceIntent = new Intent();
+                serviceIntent.setClass(this, MusicService.class);
+                Bundle serviceBundle = new Bundle();
+                serviceBundle.putSerializable("play_list", last_song);
+                serviceIntent.putExtras(serviceBundle);
+                startService(serviceIntent);
             }
         }
     }
@@ -140,20 +146,6 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     }
 
     @Override
-    protected void onResume() {
-        int postion = intent.getIntExtra("position", 0);
-        title_name = intent.getStringExtra("title_name");
-        if (title_name != null) {
-            DB_ModifyPlayList dmp = new DB_ModifyPlayList(this, title_name);
-            songlist = dmp.getSongList();
-            adapter.setDatas(songlist);
-        }
-        if (songlist != null)
-            show_name.setText(songlist.get(postion).getName());
-        super.onResume();
-    }
-
-    @Override
     public void OnCommonClickListener(View v, int position) {
 
         play.setImageResource(R.mipmap.pause);
@@ -168,7 +160,8 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             serviceBundle.putSerializable("play_list", songlist);
         }
         serviceIntent.putExtras(serviceBundle);
-        serviceIntent.putExtra("position", position);
+        String aa = String.valueOf(position);
+        serviceIntent.putExtra("position", aa);
         startService(serviceIntent);
     }
 
@@ -183,33 +176,25 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             case R.id.play:
                 Gpp.v("play");
                 if (songlist != null || last_song != null) {
-                    if (musicService.isPlay()) {
-                        musicService.pause();
-                        play.setImageResource(R.mipmap.paly);
-                        Toast.makeText(this, "暂停", Toast.LENGTH_LONG).show();
-                    } else {
-                        musicService.play();
-                        if (songlist == null) {
-                            musicService.startPlay(last_song.get(0));
-                        }
-                        play.setImageResource(R.mipmap.pause);
-                        Toast.makeText(this, "播放", Toast.LENGTH_LONG).show();
-                    }
-                }
+                    play_btn();
+                } else
+                    Toast.makeText(this, "没有什么歌放啊！", Toast.LENGTH_LONG).show();
                 break;
             case R.id.next:
                 Gpp.v("next");
                 if (songlist != null || last_song != null) {
                     musicService.next();
                     play.setImageResource(R.mipmap.pause);
-                }
+                } else
+                    Toast.makeText(this, "没有什么歌放啊！", Toast.LENGTH_LONG).show();
                 break;
             case R.id.previous:
                 Gpp.v("previous");
                 if (songlist != null || last_song != null) {
                     musicService.pre();
                     play.setImageResource(R.mipmap.pause);
-                }
+                } else
+                    Toast.makeText(this, "没有什么歌放啊！", Toast.LENGTH_LONG).show();
                 break;
             case R.id.model:
                 if (musicService.isListrecycle()) {
@@ -239,15 +224,33 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         }
     }
 
+    private void play_btn() {
+        if (musicService.isPlay()) {
+            musicService.pause();
+            play.setImageResource(R.mipmap.paly);
+            Toast.makeText(this, "暂停", Toast.LENGTH_LONG).show();
+        } else {
+            musicService.play();
+            play.setImageResource(R.mipmap.pause);
+            Toast.makeText(this, "播放", Toast.LENGTH_LONG).show();
+        }
+    }
+
     public ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.CoreServiceBinder serviceBinder = (MusicService.CoreServiceBinder) service;
             musicService = serviceBinder.getService();
+            if (musicService.isPlay()) play.setImageResource(R.mipmap.pause);
             musicService.setPauseCallBack(new MusicService.pauseCallBack() {
                 @Override
                 public void paused() {
                     play.setImageResource(R.mipmap.paly);
+                }
+
+                @Override
+                public void started() {
+                    play.setImageResource(R.mipmap.pause);
                 }
             });
             musicService.setPlayMesssageCallBack(new MusicService.PlayMesssageCallBack() {
@@ -298,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             DB_ModifyPlayList dmp = new DB_ModifyPlayList(this, title_name);
             dmp.saveLast(songlist);
         }
-        Gpp.v("onDestroy:" + title_name);
+        Gpp.v("onDestroy保存:" + title_name);
     }
 
     public class songReceiver extends BroadcastReceiver {
@@ -313,5 +316,21 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             Gpp.v("onReceive:" + Duration);
 //            }
         }
+    }
+
+    //activity启动模式设置SingleTask要重写OnNewIntent
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Gpp.v("onNewIntent");
+        int postion = intent.getIntExtra("position", 0);
+        title_name = intent.getStringExtra("title_name");
+        if (title_name != null) {
+            DB_ModifyPlayList dmp = new DB_ModifyPlayList(this, title_name);
+            songlist = dmp.getSongList();
+            adapter.setDatas(songlist);
+        }
+        if (songlist != null)
+            show_name.setText(songlist.get(postion).getName());
+        super.onNewIntent(intent);
     }
 }

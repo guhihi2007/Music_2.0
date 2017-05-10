@@ -101,8 +101,9 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
         serviceIntent.setClass(this, MusicService.class);
         Bundle serviceBundle = new Bundle();
         serviceBundle.putSerializable("play_list", list);
+        String aa = String.valueOf(position);
+        serviceIntent.putExtra("position",aa);
         serviceIntent.putExtras(serviceBundle);
-        serviceIntent.putExtra("position",position);
         startService(serviceIntent);
 
     }
