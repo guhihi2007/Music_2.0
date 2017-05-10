@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.music_20.Gpp;
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
@@ -63,7 +64,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
                 list = (ArrayList<Data>) bundle.get("threadList");
                 adapter.setDatas(list);//更新Recycleview数据
 
-                Log.v("gpp", "Handler接收数据:" + list.size());
+                Gpp.v("Handler接收数据:" + list.size());
             }
         };
         if (callback == null) {
@@ -128,7 +129,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
         intent.putExtra("dirpath", dirpath);
         intent.putExtra("dirname", dirname);
         intent.putExtra("title_name", playlist_name);
-        Log.v("gpp", "进入文件夹:" + dirname);
+        Gpp.v("进入文件夹:" + dirname);
         startActivity(intent);
     }
 
@@ -155,12 +156,12 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
                 ArrayList<Song> chosesonglist = new ArrayList<>();
                 ArrayMap map = adapter.getArrayMap();
                 if (map.size() > 0) {
-                    Log.v("gpp", "map：" + map.size());
+                    Gpp.v("map：" + map.size());
                     //遍历map，存入ArrayList
                     for (Object music : map.values()) {
                         Song song = (Song) music;
                         chosesonglist.add(song);
-//                        Log.v("gpp", "Map取出：" + song.getName());
+//                       Gpp.v("Map取出：" + song.getName());
                         DB_ModifyPlayList dbModifyPlayList = new DB_ModifyPlayList(SearchActivtiy.this, playlist_name);
                         dbModifyPlayList.add_songToList(song);
                     }
@@ -173,7 +174,7 @@ public class SearchActivtiy extends Activity implements InitView, CommonClickLis
                     back.setClass(SearchActivtiy.this, SongListActivtiy.class);
                     startActivity(back);
                 } else {
-                    Log.v("gpp", "map：" + map.size());
+                    Gpp.v("map：" + map.size());
                     finish();
                 }
                 break;

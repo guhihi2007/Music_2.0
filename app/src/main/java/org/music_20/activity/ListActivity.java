@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.music_20.Gpp;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
 import org.music_20.R;
@@ -109,7 +110,7 @@ public class ListActivity extends Activity implements InitView, View.OnClickList
         Intent intent = new Intent();
         intent.setClass(this, SongListActivtiy.class);
         intent.putExtra("title_name", dirname);
-        Log.v("gpp", "进入列表:" + dirname);
+        Gpp.v("进入列表:" + dirname);
         startActivity(intent);
     }
 

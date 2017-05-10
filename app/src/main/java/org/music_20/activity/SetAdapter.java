@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.music_20.Gpp;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.CommonRecycleAdapter;
@@ -45,8 +46,8 @@ class SetAdapter extends CommonRecycleAdapter<Data> implements MultiItemViewType
                 dialog.setokListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.v("gpp", "SetAdapterList大小:" + datas.size());
-                        Log.v("gpp", "SetAdapterposition:" + position);
+                        Gpp.v("SetAdapterList大小:" + datas.size());
+                        Gpp.v("SetAdapterposition:" + position);
                         DB_ModifyPlayList dmp = new DB_ModifyPlayList(context, datas.get(position).getName());
                         dmp.deleteTable();
                         datas.remove(position);

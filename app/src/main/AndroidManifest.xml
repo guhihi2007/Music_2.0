@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.music_20">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -13,7 +15,8 @@
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <intent-filter>
@@ -24,10 +27,12 @@
         </activity>
         <activity android:name=".activity.ListActivity" />
         <activity android:name=".activity.SearchActivtiy" />
-        <activity android:name=".activity.AddListAcitvity"
-            android:windowSoftInputMode="stateAlwaysVisible"/>
+        <activity
+            android:name=".activity.AddListAcitvity"
+            android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".activity.SongListActivtiy" />
         <activity android:name=".activity.SetActivity" />
+        <activity android:name=".activity.Test" />
         <service android:name=".service.MusicService" />
     </application>
 

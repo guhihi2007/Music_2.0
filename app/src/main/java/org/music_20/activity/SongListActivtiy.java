@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.music_20.Gpp;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.InitView;
@@ -84,7 +85,7 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
          */
 //        String name = list.get(position).getName();
 //        Song song = list.get(position);
-//        Log.v("gpp", "点击音乐:" + name);
+//        Gpp.v("点击音乐:" + name);
 
         Intent activity = new Intent();
         activity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -133,7 +134,7 @@ public class SongListActivtiy extends Activity implements InitView, View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == resultCode) {
             String result = data.getStringExtra("playlist_name");//从返回的activity Intent中取数据
-            Log.v("gpp", "数据返回添加到播放列表" + result);
+            Gpp.v("数据返回添加到播放列表" + result);
         }
     }
 

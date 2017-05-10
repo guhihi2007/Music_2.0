@@ -25,11 +25,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.music_20.Gpp;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.CommonRecycleAdapter;
 import org.music_20.base.InitView;
 import org.music_20.R;
 import org.music_20.database.modify.DB_ModifyPlayList;
+import org.music_20.notification.MyNotification;
 import org.music_20.service.MusicService;
 
 import java.text.SimpleDateFormat;
@@ -49,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     private SeekBar seekbar;
     private SimpleDateFormat format = new SimpleDateFormat("mm:ss");
     private String title_name;
-    private Boolean isplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     musicService.seekTo(progress * 1000);
-                    Log.v("gpp", "SeekBarChanged:" + progress);
+                    Gpp.v("SeekBarChanged:" + progress);
                 }
             }
 
@@ -115,11 +116,11 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         if (songlist != null) {
             play.setImageResource(R.mipmap.pause);
             adapter.setDatas(songlist);
-            Log.v("gpp", "上一页面传来List:" + songlist.size());
+            Gpp.v("上一页面传来List:" + songlist.size());
         } else {
             if (last_song != null) {
                 adapter.setDatas(last_song);
-                Log.v("gpp", "最后一次播放List:" + last_song.size());
+                Gpp.v("最后一次播放List:" + last_song.size());
             }
         }
     }
@@ -128,12 +129,11 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         final Intent server = new Intent();
         server.setClass(this, MusicService.class);
         bindService(server, conn, BIND_AUTO_CREATE);
-        Log.v("gpp", "bindCoreService:" + musicService);
 
     }
 
     private void registerReceive() {
-        Log.v("gpp", "注册Receiver");
+//        Gpp.v(注册Receiver");
         IntentFilter filter = new IntentFilter();
         filter.addAction("songDuration");
         registerReceiver(songReceiver, filter);
@@ -150,10 +150,6 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
         }
         if (songlist != null)
             show_name.setText(songlist.get(postion).getName());
-        Log.v("gpp", "onResume:" + musicService);
-
-//        if (musicService != null && musicService.isPlay())
-//            play.setImageResource(R.mipmap.pause);
         super.onResume();
     }
 
@@ -185,8 +181,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.play:
-//                Notify();
-                Log.v("gpp", "play");
+                Gpp.v("play");
                 if (songlist != null || last_song != null) {
                     if (musicService.isPlay()) {
                         musicService.pause();
@@ -203,14 +198,14 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
                 }
                 break;
             case R.id.next:
-                Log.v("gpp", "next");
+                Gpp.v("next");
                 if (songlist != null || last_song != null) {
                     musicService.next();
                     play.setImageResource(R.mipmap.pause);
                 }
                 break;
             case R.id.previous:
-                Log.v("gpp", "previous");
+                Gpp.v("previous");
                 if (songlist != null || last_song != null) {
                     musicService.pre();
                     play.setImageResource(R.mipmap.pause);
@@ -262,11 +257,6 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
                     msg.what = current;
                     handler.sendMessage(msg);
                 }
-//                @Override
-//                public void songDuration(int duration) {
-//                    end_time.setText(format.format(duration));
-//                    Log.v("gpp", "Override:" + duration);
-//                }
             });
         }
 
@@ -292,23 +282,11 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             Bundle serviceBundle = new Bundle();
             if (last_song != null && songlist == null) {
                 serviceBundle.putSerializable("play_list", last_song);
-                Log.v("gpp", "startCoreService:" + last_song.size());
+                Gpp.v("startCoreService:" + last_song.size());
             }
             serviceIntent.putExtras(serviceBundle);
             startService(serviceIntent);
         }
-    }
-
-    private void Notify() {
-        RemoteViews rv = new RemoteViews(this.getPackageName(), R.layout.notification_layout);
-        rv.setTextViewText(R.id.notify_tv, "song_name");
-
-        NotificationCompat.Builder NCB = new NotificationCompat.Builder(this);
-        NCB.setSmallIcon(R.id.music_item_im);
-        NCB.setContent(rv);
-
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(0, NCB.build());
     }
 
     @Override
@@ -320,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             DB_ModifyPlayList dmp = new DB_ModifyPlayList(this, title_name);
             dmp.saveLast(songlist);
         }
-        Log.v("gpp", "onDestroy:" + title_name);
+        Gpp.v("onDestroy:" + title_name);
     }
 
     public class songReceiver extends BroadcastReceiver {
@@ -332,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements InitView, View.On
             end_time.setText(format.format(Duration));
             seekbar.setMax(Duration / 1000);
             show_name.setText(name);
-            Log.v("gpp", "onReceive:" + Duration);
+            Gpp.v("onReceive:" + Duration);
 //            }
         }
     }

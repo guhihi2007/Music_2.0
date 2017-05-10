@@ -6,10 +6,10 @@
 
     <ImageView
         android:id="@+id/notify_icon"
-        android:layout_width="64dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:src="@mipmap/music_icon" />
+        android:layout_width="44dp"
+        android:layout_height="54dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/icon" />
 
     <ImageView
         android:id="@+id/notify_next"
@@ -28,26 +28,32 @@
         android:padding="20dp"
         android:src="@mipmap/play" />
 
+    <!--<org.music_20.activity.MyTextView-->
+    <!--android:id="@+id/notify_tv"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_toLeftOf="@id/notify_play"-->
+    <!--android:layout_toRightOf="@id/notify_icon"-->
+    <!--android:ellipsize="marquee"-->
+    <!--android:gravity="center"-->
+    <!--android:singleLine="true"-->
+    <!--android:marqueeRepeatLimit="marquee_forever"-->
+    <!--android:text="凉凉在此刻进空间发那附近"-->
+    <!--android:textSize="20sp" />-->
+
     <TextView
         android:id="@+id/notify_tv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_toLeftOf="@id/notify_play"
         android:layout_toRightOf="@id/notify_icon"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:gravity="center"
-        android:text="凉凉"
-        android:textSize="30sp" />
-    <!--<org.music_20.activity.MarqueeTextView-->
-        <!--android:id="@+id/notify_tv"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:ellipsize="marquee"-->
-        <!--android:marqueeRepeatLimit="1"-->
-        <!--android:maxLines="1"-->
-        <!--android:layout_toLeftOf="@id/notify_play"-->
-        <!--android:layout_toRightOf="@id/notify_icon"-->
-        <!--android:gravity="center"-->
-        <!--android:text="凉凉"-->
-        <!--android:textSize="30sp" />-->
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:text="凉凉在此刻进空间发那附近"
+        android:textSize="20sp" />
 
 </RelativeLayout>

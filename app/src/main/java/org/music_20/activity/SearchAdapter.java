@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import org.music_20.Gpp;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.CommonRecycleAdapter;
@@ -60,10 +61,10 @@ public class SearchAdapter extends CommonRecycleAdapter<Data> implements MultiIt
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            Log.v("gpp", "勾选：" + datas.get(position).getName());
+                            Gpp.v("勾选：" + datas.get(position).getName());
                             arrayMap.put(position, (Song) datas.get(position));
                         } else {
-                            Log.v("gpp", "删除：" + datas.get(position).getName());
+                            Gpp.v("删除：" + datas.get(position).getName());
                             arrayMap.remove(position);
                         }
                         //状态存入SparseArray记录

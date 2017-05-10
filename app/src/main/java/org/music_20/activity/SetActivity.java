@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.music_20.Gpp;
 import org.music_20.R;
 import org.music_20.base.CommonClickListener;
 import org.music_20.base.CommonRecycleAdapter;
@@ -78,7 +79,7 @@ public class SetActivity extends Activity implements InitView, View.OnClickListe
         dblist = dbModifyPlayList.getPlayList();//从数据库取播放列表数据
         adapter = new SetAdapter(this, this);
         adapter.setDatas(dblist);
-        Log.v("gpp", "SetActivityList大小:" + dblist.size());
+        Gpp.v("SetActivityList大小:" + dblist.size());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);

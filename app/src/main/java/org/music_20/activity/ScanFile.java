@@ -121,12 +121,3 @@ public class ScanFile {
 
     }
 }
-// for (File file1: files){
-//                if (file1.isDirectory()) {
-//                    String filename=file1.getName();
-//                    String filepath=file1.getAbsolutePath();
-//                    Data data= new Data(filename,filepath);
-//                    list.add(data);
-//                    Log.v("gpp",filename);
-//                }
-//            }
