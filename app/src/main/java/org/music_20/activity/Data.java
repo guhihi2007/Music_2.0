@@ -1,33 +1,23 @@
 package org.music_20.activity;
 
+
 import java.io.Serializable;
 
 /**
  * Created by Administrator on 2017/4/19.
  */
 
-public class Data implements Serializable {
-    private String name;
-    private String path,size;
-    private int count;
-//    private double size;
+public abstract class Data<T> implements Serializable {
+    protected String name,path, type;
 
-    public Data() {
+    public Data(String name) {
+        this.name = name;
     }
 
-    public Data(String name, String path) {
+    public Data(String name, String path, String type) {
         this.name = name;
         this.path = path;
-    }
-
-    public Data(String name, String path,String size) {
-        this(name, path);
-        this.size = size;
-    }
-
-    public Data(String name, String path,String size, int count) {
-        this(name, path, size);
-        this.count = count;
+        this.type = type;
     }
 
     public String getName() {
@@ -42,23 +32,26 @@ public class Data implements Serializable {
         return path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int size) {
-        this.count = count;
-    }
 
     public String getSize() {
-        return size;
+        return giveSize();
     }
+    protected abstract String giveSize();
 
-    public void setSize(String size) {
-        this.size = size;
+    public int getCount() {
+        return giveCount();
     }
+    protected abstract int giveCount();
+
+    public String getFall_name() {
+        return givefall_name();
+    }
+    protected abstract String givefall_name();
+
+
+    public String getType() {
+        return giveType();
+    }
+    protected abstract String giveType();
+
 }

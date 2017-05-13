@@ -2,10 +2,18 @@ package org.music_20.base;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
+import org.music_20.R;
+import org.music_20.activity.Data;
+import org.music_20.activity.Song;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,28 +22,75 @@ import java.util.List;
 
 public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<CommonViewHolder> {
     //数据支持泛型List<T>
-    private List<T> datas;
+    protected List<T> datas;
     private LayoutInflater layoutInflater;
-    private int LayoutID;
+    protected int LayoutID;
+    protected MultiItemViewType<T> multiItemViewType;
+    protected SparseArray<Boolean> boxarray = new SparseArray<>();
+    protected boolean hasCheckbox;
+    protected View footView;
+    protected Context context;
+    public CommonRecycleAdapter(Context context) {
+        this.layoutInflater = LayoutInflater.from(context);
+        this.context=context;
+    }
 
     //构造方法中传入datas,layoutID,layoutID就是viewholder的布局文件id
     public CommonRecycleAdapter(Context context, List<T> datas, int layoutID) {
         this.layoutInflater = LayoutInflater.from(context);
         this.datas = datas;
+        this.context=context;
+
         this.LayoutID = layoutID;
+    }
+
+    public CommonRecycleAdapter(Context context, List<T> datas) {
+        this.layoutInflater = LayoutInflater.from(context);
+        this.datas = datas;
+        this.context=context;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (multiItemViewType != null) {
+            return multiItemViewType.getLayouId(datas.get(position), position);
+        }
+        return super.getItemViewType(position);
     }
 
     @Override
     public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (multiItemViewType != null) {
+            LayoutID = viewType;
+        }
         View view = layoutInflater.inflate(LayoutID, parent, false);
         CommonViewHolder commonViewHolder = new CommonViewHolder(view);
         return commonViewHolder;
     }
 
+    public void setDatas(List<T> datas) {
+        this.datas = datas;
+        initNOselected();//设置box初始状态
+        this.notifyDataSetChanged();
+    }
+
+    public void setSong(List<Song> datas) {
+        this.datas = (List<T>) datas;
+        initNOselected();//设置box初始状态
+        this.notifyDataSetChanged();
+    }
+
+    public void addData(List<T> datas) {
+//        this.datas.clear();
+        this.datas = datas;
+        this.datas.addAll(datas);
+        this.notifyDataSetChanged();
+    }
+
     //设置数据，调用抽象方法bindData，继承这个类实现bindData方法
     @Override
     public void onBindViewHolder(CommonViewHolder holder, int position) {
-        bindData(holder, datas.get(position));
+        bindData(holder, datas.get(position), position);
     }
 
     @Override
@@ -44,5 +99,18 @@ public abstract class CommonRecycleAdapter<T> extends RecyclerView.Adapter<Commo
     }
 
     //抽象方法
-    protected abstract void bindData(CommonViewHolder holder, T data);
+    protected abstract void bindData(CommonViewHolder holder, T data, int position);
+
+
+    private void initNOselected() {
+        if (datas != null)
+            for (int i = 0; i < datas.size(); i++) {
+                boxarray.put(i, false);
+            }
+    }
+
+    public SparseArray<Boolean> getBoxarray() {
+        return boxarray;
+    }
+
 }

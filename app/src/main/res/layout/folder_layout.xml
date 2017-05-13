@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/direct_layout"
     android:layout_height="50dp"
     android:layout_gravity="center"
     android:orientation="horizontal">
@@ -10,7 +11,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
-        android:src="@mipmap/music_icon" />
+        android:src="@mipmap/dire" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,16 +40,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/vh_tv"
                 android:layout_gravity="center"
-                android:text="2项"
                 android:textSize="10sp" />
 
         </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/vh_cb"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:visibility="invisible" />
+        <!--<CheckBox-->
+            <!--android:id="@+id/vh_cb"-->
+            <!--android:layout_width="60dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:visibility="invisible" />-->
     </LinearLayout>
 </RelativeLayout>
