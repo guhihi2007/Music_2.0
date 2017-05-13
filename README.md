@@ -6,8 +6,9 @@ Music_app
 3、Broadcast动态注册
 4、Recycleview支持多布局item
 5、DataBase增、删、查、改
-
-一、Activity
+``
+##一、Activity
+``
 1、用到了activity启动模式中的：singleTask
   在Music_2.0的作用：通知栏启动Mainactivity时，有就复用并且清除其上所有activity，没有就重新创建
                     从其他activity跳转到Mainactivity时也会清除其他activity，保证了MAinActivity的唯一
@@ -17,6 +18,7 @@ Music_app
             注意：1. intnet.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 跳转的页面会从 OnCreate（）方法开始执行。
                   2.FLAG_ACTIVITY_CLEAR_TOP  相当于 加载模式的 signleTask
                    3.设置了此模式要重写OnNewIntent(),因为栈中如果已经有了MAinActivity，再次启动时通过getIntent拿到的是旧的intent，要拿的新数据就重写此方法
+``                  
 2、数据传递：
     将数据Data对象放入Bundle中，通过intent的携带传递出去
      
